@@ -48,6 +48,7 @@ Any user within the network can access any files from any device 📱💻 easill
    - Save the password in a secure place (password manager or encrypted note).
 
 6. Create users
+   - Get IP using `ip addr` command.
    - Recommended: use the web UI (http://SERVER_IP:8080) to set precise permissions:
      - admin: full access (or admin role)
      - guest: scope = / (or mount), enable read + write (create/upload/rename), disable delete
