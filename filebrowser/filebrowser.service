@@ -1,0 +1,14 @@
+[Unit]
+Description=File Browser
+After=network.target
+
+[Service]
+User=filebrowser
+Group=filebrowser
+# listen on all interfaces, port 8080, use /var/lib/filebrowser as root and DB location
+ExecStart=/usr/local/bin/filebrowser --address 0.0.0.0 -p 8080 -r /var/lib/filebrowser --database /var/lib/filebrowser/filebrowser.db
+WorkingDirectory=/var/lib/filebrowser
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
