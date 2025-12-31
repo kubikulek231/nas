@@ -178,7 +178,8 @@ Admins, who can edit or delete others files too:
 6. Notes and recommendations
     > If you change smb.conf, reload: `sudo systemctl restart smbd`.
 
-### Multi-user: apply shared-directory behaviour to subdirs (keep /srv/data non-writable)
+### Multi-user: apply shared-directory behaviour to subdirs
+---
 
 This workflow is integrated above in "Directories and Permissions" — see the ownership, setgid, sticky bit, and setfacl commands in step 3 which apply the shared-directory policy to /srv/data/safe and /srv/data/fast. Do not make /srv/data itself writable; apply write permissions only to the chosen subdirectories.
 
