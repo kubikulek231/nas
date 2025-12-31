@@ -1,4 +1,4 @@
-# set-nfs-uid-gid.ps1
+# set-nfs-uid-gid-fixed.ps1
 
 # 1) Require admin
 $principal = New-Object Security.Principal.WindowsPrincipal(
@@ -17,10 +17,12 @@ Write-Host ""
 $uid = Read-Host "Enter Unix UID (e.g. 1001)"
 $gid = Read-Host "Enter Unix primary GID (e.g. 1007)"
 
-if (-not ($uid -as [int]) -or -not ($gid -as [int])) {
+if (-not [int]::TryParse($uid, [ref]([int]0)) -or
+    -not [int]::TryParse($gid, [ref]([int]0))) {
     Write-Error "UID and GID must be numeric."
     exit 1
 }
+
 
 $uid = [int]$uid
 $gid = [int]$gid
@@ -28,10 +30,15 @@ $gid = [int]$gid
 Write-Host ""
 Write-Host "Setting AnonymousUID=$uid and AnonymousGID=$gid for Client for NFS..."
 
-# 3) Write registry keys
+# 3) Registry path
 $regPath = "HKLM:\SOFTWARE\Microsoft\ClientForNFS\CurrentVersion\Default"
-New-Item -Path $regPath -Force | Out-Null
 
+# Create the key ONLY if it doesn't exist (do NOT use -Force)
+if (-not (Test-Path $regPath)) {
+    New-Item -Path $regPath | Out-Null
+}
+
+# 4) Create or update ONLY the two needed values
 New-ItemProperty -Path $regPath -Name "AnonymousUID" -Value $uid -PropertyType DWord -Force | Out-Null
 New-ItemProperty -Path $regPath -Name "AnonymousGID" -Value $gid -PropertyType DWord -Force | Out-Null
 
