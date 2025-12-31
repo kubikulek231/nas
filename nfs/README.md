@@ -62,6 +62,8 @@ Enable-WindowsOptionalFeature -Online -FeatureName `
 ```
 > You can use `enable-nfs-client.ps1` script file next to this readme.
 
+> But for that, enable powershell scripts by running: `Set-ExecutionPolicy Unrestricted`.
+
 Open CMD (Not as administrator). To mount a drive to Y:
 
 ```cmd
