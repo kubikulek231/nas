@@ -1,4 +1,4 @@
-### NAS Setup Scripts and Config
+# NAS Setup Scripts and Config
 
 This repository tracks development and a setup of a DIY ODROID H4 NAS 📦.
 
@@ -9,8 +9,9 @@ This repository tracks development and a setup of a DIY ODROID H4 NAS 📦.
 4. [Smb](./smb/README.md)
 5. [Filebrowser](./filebrowser/README.md)
 6. [Jellyfin](./jellyfin/README.md)
-6. [Torrent](./torrent/README.md)
-> Follow the steps in organized manner beggining with 1 ☺️.
+7. [Torrent](./torrent/README.md)
+
+> Follow the steps in an organized manner, beginning with 1 ☺️.
 
 ### HW
 The NAS is using the ODROID H4 board with intel N97 and utilises:
@@ -30,4 +31,4 @@ Currently running Ubuntu 24.04.3 LTS (Server).
 
 3) Make sure motherboards BIOS is up to date, update if needed and enable in band ECC (very nice feature by Hardkernel - creators of the H4 board).
 4) Flash the Ubuntu on the NVME, make sure it is bootable. Add user "nas".
-5) Continue ZFS - Filesystem in [Index](#index). 
+5) Continue ZFS - Filesystem in [Index](#index).
