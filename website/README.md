@@ -52,3 +52,4 @@ Go back to [Index](./../README.md)
     sudo systemctl start nashub-website.service
     sudo systemctl status nashub-website.service
     ```
+    Or if this whole repository is cloned via git, just run the do `chmod +x ./deploy` and run ./deploy from inside the website dir.
