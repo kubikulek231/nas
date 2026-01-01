@@ -1,5 +1,5 @@
 .button {
-  display: flexbox;
+  display: flex;              /* was: flexbox */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -14,6 +14,7 @@
   text-decoration: none;
   cursor: pointer;
   width: 100%;
+  box-sizing: border-box;     /* ensures padding doesn't overflow */
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
@@ -25,7 +26,6 @@
 .button-image {
   width: 48px;
   height: 48px;
-  margin-bottom: 10px;
 
   /* color of the icon */
   background-color: #e5e7eb;
@@ -40,6 +40,7 @@
   -webkit-mask-size: 70%;
   mask-size: 70%;
 }
+
 /* Text block */
 .button-text {
   font-size: 0.98rem;
