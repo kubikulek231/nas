@@ -24,7 +24,7 @@
   border-color: #15803d;
   color: #f9fafb;
   box-shadow: 0 8px 18px rgba(22, 163, 74, 0.45);
-  background-image: url("{{ url_for('static', filename='browse.svg') }}");
+  background-image: url("/static/browse.svg");
   background-repeat: no-repeat;
   background-position: 14px center;
   background-size: 18px 18px;
