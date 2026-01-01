@@ -15,10 +15,21 @@
     <main class="content">
       <section class="card">
         <h2>Browse your files</h2>
+
+        <p>
+          NAS IP address:
+          <span class="endpoint">{{ server_ip }}</span>
+          (DNS name:
+          <span class="endpoint">{{ server_name }}</span>)
+        </p>
+
         <p>
           Your NAS files are fully browsable at
-          <span class="endpoint">{{ base_url }}:8080</span>.
+          <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
+            {{ base_url }}:8080
+          </a>.
         </p>
+
         <p class="note">
           Use this page as a starting point. Mounting tutorials for SMB and NFS,
           example scripts, and more will be added here later.

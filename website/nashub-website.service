@@ -8,5 +8,9 @@ WorkingDirectory=/srv/website
 ExecStart=/usr/bin/python3 /usr/bin/gunicorn -w 2 -b 0.0.0.0:5000 app:app
 Restart=on-failure
 
+Environment="SERVER_IP=192.168.1.230"
+Environment="SERVER_NAME=nas.local"
+Environment="BASE_URL=http://192.168.1.230"
+
 [Install]
 WantedBy=multi-user.target
