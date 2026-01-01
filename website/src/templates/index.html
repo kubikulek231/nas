@@ -35,6 +35,20 @@
           example scripts, and more will be added here later.
         </p>
       </section>
+
+      <section class="card">
+      <h2>Storage usage</h2>
+      <ul>
+        {% for name, d in disks.items() %}
+          <li>
+            {{ name|capitalize }} ({{ d.path }}):
+            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+            ({{ "%.1f"|format(d.percent) }}% used)
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+
     </main>
 
     <footer class="footer">
