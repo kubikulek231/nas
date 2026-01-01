@@ -46,7 +46,8 @@ Admins, who can edit or delete others files too:
     ```bash
     # groups
     sudo groupadd nasadmingroup    # admin group (full control on subdirs)
-    sudo groupadd nasusergroup     # regular users (can create files, only owner can edit/delete)
+    sudo groupadd nasusergroup     # regular users 
+    # users can create files, only owner can edit/delete
 
     # users
     sudo adduser nasadmin
@@ -66,29 +67,38 @@ Admins, who can edit or delete others files too:
     sudo usermod -aG nasadmingroup nasadmin
 5. Set base Linux File Permissions
     ```bash
-    # Ensure /srv/data is root-owned and not writable
+    # ensure /srv/data is root-owned and not writable
     sudo chown root:root /srv/data
     sudo chmod 0755 /srv/data
 
-    # Make subdirs owned by the admin user (nasadmin) with group nasadmingroup so admins have full control.
+    # shared subdirs: owned by root, group = nasadmingroup
     sudo mkdir -p /srv/data/safe /srv/data/fast
-    # Make root the directory owner and keep nasadmingroup as the group.
-    # This ensures only root (or the file owner) can remove the subdir entries when the sticky bit is set.
     sudo chown root:nasadmingroup /srv/data/safe /srv/data/fast
 
-    # setgid so new files/dirs inherit nasadmingroup; base perms block others
-    sudo chmod 2770 /srv/data/safe /srv/data/fast
+    # setgid: new files/dirs inherit nasadmingroup
+    # 2775 => owner rwx, group rwx, others r-x (everyone can read/list)
+    sudo chmod 2775 /srv/data/safe /srv/data/fast
 
-    # sticky bit so only file owners (or directory owner nasadmin, or root) can delete files; admins can manage via group ACLs
+    # sticky bit: only file owner, directory owner (root), or root can delete/rename entries
     sudo chmod +t /srv/data/safe /srv/data/fast
     ```
-6. Install ACL
+    > Notes:
+    >
+    > With a normal umask 022:
+    >
+    > A file created by user1 becomes rw-r--r-- owned by user1:nasadmingroup.
+    >
+    > Any user can read it.
+    >
+    > Only user1 (owner), root, or someone acting as root can modify it.
+
+6. Install ACL (if needed)
     ```bash
     # Install ACL utility so setfacl/getfacl are available
     sudo apt update
     sudo apt install -y acl
     ```
-7. Set ACL Permissions (fine-grained access)
+7. Set ACL Permissions (fine-grained access, if needed)
     ```bash
     # If using ZFS, enable POSIX ACL support on the datasets backing the bind mounts
     # (replace dataset names if different)
@@ -99,22 +109,6 @@ Admins, who can edit or delete others files too:
     sudo zfs set acltype=posixacl fasttank/data
     sudo zfs set aclmode=passthrough fasttank/data
     sudo zfs set xattr=sa fasttank/data
-
-    # Apply ACLs:
-    # - grant nasadmingroup rwx on files/directories (admins full control)
-    # - grant nasusergroup rwx on the directories so regular users can create entries
-    # - default ACL: owner::rwx, group::rwx (group == nasadmingroup), others none
-    sudo setfacl -R -m g:nasadmingroup:rwx /srv/data/safe /srv/data/fast
-    sudo setfacl -R -m g:nasusergroup:rwx /srv/data/safe /srv/data/fast
-    sudo setfacl -R -m u::rwx,g::rwx,o::--- /srv/data/safe /srv/data/fast
-
-    # Default (inherited) ACLs so new files:
-    # - owner (creator) gets rwx on their files
-    # - nasadmingroup gets rwx on all new files (admin full access)
-    # - nasusergroup receives directory-level rights but does not get group-write on individual files
-    sudo setfacl -R -d -m u::rwx,g::rwx,o::--- /srv/data/safe /srv/data/fast
-    # ensure nasusergroup can create entries in directories (inherit)
-    sudo setfacl -R -d -m g:nasusergroup:rwx /srv/data/safe /srv/data/fast
     ```
 
 ### Install and Setup SMB

@@ -1,6 +1,8 @@
 Go back to [Index](./../README.md)
 
-## NFS
+## NFS (Not Deployed)
+> It couldn't be made to work on the NAS, and the Windows NFS client was particularly problematic.
+> Therefore, implementing this has been postponed for another time. The README is kept for future reference.
 
 This file describes how to set up NFS on Ubuntu using the same users/groups created for SMB so NAS folders are accessible from Linux and macOS on the local network.
 
@@ -18,16 +20,16 @@ Summary of expected local accounts (created during SMB setup)
 
     ```bash
     # per-user, UID/GID enforced, root squashed
-    /srv/data/safe    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)
-    /srv/data/fast    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)
-    /srv/data    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)
+    /srv/data/safe 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
+    /srv/data/fast 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
+    /srv/data      192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
     ```
 
     You can do it by for example running these commands:
     ```bash
-    echo "/srv/data/safe    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)" | sudo tee -a /etc/exports
-    echo "/srv/data/fast    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)" | sudo tee -a /etc/exports
-    echo "/srv/data    192.168.1.0/24(rw,sync,no_subtree_check,root_squash)" | sudo tee -a /etc/exports
+    echo "/srv/data/safe    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
+    echo "/srv/data/fast    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
+    echo "/srv/data    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
     ```
 
 3) Apply exports
