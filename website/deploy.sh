@@ -13,7 +13,11 @@ sudo mkdir -p "${TARGET_DIR}"
 # Adjust excludes as needed.
 sudo rsync -av \
   --delete \
-  ./ "${TARGET_DIR}/"
+  ./src/ "${TARGET_DIR}"
+
+sudo rsync -av \
+  --delete \
+  ./src/ "${TARGET_DIR}"
 
 echo "[deploy] Setting ownership (nas:nas) ..."
 sudo chown -R nas:nas "${TARGET_DIR}"
