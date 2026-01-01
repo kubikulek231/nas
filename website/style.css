@@ -1,0 +1,143 @@
+:root {
+  --bg: #050816;
+  --bg-elevated: #0f172a;
+  --accent: #38bdf8;
+  --accent-soft: rgba(56, 189, 248, 0.15);
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+  --radius-lg: 18px;
+  --radius-md: 10px;
+  --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.85);
+  --shadow-card: 0 14px 30px rgba(15, 23, 42, 0.75);
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+               "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  background: radial-gradient(circle at top left, #1d2437, #050816 55%, #020617);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page {
+  width: 100%;
+  max-width: 880px;
+  margin: 32px;
+  padding: 28px 30px 24px;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.13), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.16), transparent 60%),
+    linear-gradient(to bottom right, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.98));
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  backdrop-filter: blur(18px);
+}
+
+.header {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header h1 {
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card {
+  background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
+              rgba(15, 23, 42, 0.96);
+  border-radius: var(--radius-md);
+  padding: 18px 20px 20px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: var(--shadow-card);
+}
+
+.card h2 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.card p {
+  margin: 4px 0;
+  line-height: 1.5;
+  font-size: 0.98rem;
+}
+
+.endpoint {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  margin-left: 3px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+}
+
+.note {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.footer {
+  margin-top: 22px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer .dot {
+  color: rgba(148, 163, 184, 0.7);
+}
+
+@media (max-width: 640px) {
+  .page {
+    margin: 16px;
+    padding: 22px 18px 18px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+}

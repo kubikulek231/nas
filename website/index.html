@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NAS Hub</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Welcome to your NAS</h1>
+      <p class="subtitle">A simple hub for your home storage</p>
+    </header>
+
+    <main class="content">
+      <section class="card">
+        <h2>Browse your files</h2>
+        <p>
+          Your NAS files are fully browsable at
+          <span class="endpoint">{{ base_url }}:8080</span>.
+        </p>
+        <p class="note">
+          Use this page as a starting point. Mounting tutorials for SMB and NFS,
+          example scripts, and more will be added here later.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>NAS Hub</span>
+      <span class="dot">&bull;</span>
+      <span>Self‑hosted storage</span>
+    </footer>
+  </div>
+</body>
+</html>
