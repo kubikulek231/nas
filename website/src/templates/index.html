@@ -12,14 +12,14 @@
     <header class="header">
       <h1>NAS Hub</h1>
       <p class="subtitle">
-        Welcome to a simple landing page for our NAS📦.
+        Welcome to a simple landing page for our NAS 📦.
       </p>
     </header>
 
     <main class="content">
       <section class="card">
         <h2>Overview</h2>
-          <div class="endpoint-container">
+        <div class="endpoint-container">
           <p>
             Local DNS name:
             <span class="endpoint">{{ server_name }}</span>
@@ -34,16 +34,16 @@
       <section class="card">
         <h2>Web File Browser</h2>
         <p class="note">
-          Use built-in <b>FileBrowser Quantum</b> with browser and device of your choice.
+          Use the built‑in <b>FileBrowser Quantum</b> from any browser or device.
         </p>
 
-      <div class="button button-primary"
-          role="button"
-          tabindex="0"
-          onclick="window.open('{{ base_url }}:8080', '_blank', 'noopener');">
-        <div class="button-image"></div>
-        <div class="button-text">Browse Now</div>
-      </div>
+        <div class="button button-primary"
+             role="button"
+             tabindex="0"
+             onclick="window.open('{{ base_url }}:8080', '_blank', 'noopener');">
+          <div class="button-image"></div>
+          <div class="button-text">Browse Now</div>
+        </div>
 
         <p>
           Web UI endpoint:
@@ -54,7 +54,7 @@
       </section>
 
       <section class="card">
-        <h2>Storage usage</h2>
+        <h2>Storage Usage</h2>
         <ul class="storage-list">
           {% for name, d in disks.items() %}
             <li class="storage-item">
@@ -76,12 +76,101 @@
           {% endfor %}
         </ul>
       </section>
+
+      <!-- Windows SMB guide -->
+      <section class="card">
+        <h2>Windows Mount Guide: SMB</h2>
+        <p class="note">
+          Use the built-in Windows SMB feature to mount your NAS drives.
+        </p>
+
+        <div class="guide-step">
+          <h3>1. Open `Map Network Drive`</h3>
+        <p>
+          Open File Explorer, select <b>This PC</b>, then on the toolbar choose
+          <b>More options</b> (three dots) and click <b>Map network drive…</b>.
+        </p>
+          <img src="/static/add-network-drive.png"
+               alt="Windows File Explorer showing the Map network drive option">
+        </div>
+
+        <div class="guide-step">
+          <h3>2. Enter the NAS path</h3>
+          <p>
+            In the wizard, choose a drive letter and enter the network path in the form
+            <code>\\SERVER_IP_OR_NAME\DIRECTORY</code>.
+          </p>
+          <img src="/static/enter-url.png"
+               alt="Windows dialog for entering the network folder path">
+        </div>
+
+        <div class="guide-step">
+          <h3>3. Enter credentials</h3>
+          <p>
+            When prompted, enter your NAS username and password and enable
+            <b>Remember my credentials</b>.
+          </p>
+          <img src="/static/enter-credentials.png"
+               alt="Windows credentials dialog for network share">
+        </div>
+      </section>
+
+      <!-- Windows NFS guide -->
+      <section class="card">
+        <h2>Windows Mount Guide: NFS</h2>
+        <p class="note">
+          Recommended for advanced users. NFS can provide higher transfer speeds.
+            The NFS client feature is available only in specific Windows editions that include
+  <b>Client for NFS</b> (Windows Server and Pro versions).
+        </p>
+
+        <div class="guide-step">
+          <h3>1. Enable the NFS client</h3>
+          <p>
+            Download the Windows NFS client enable script:
+            <a href="https://raw.githubusercontent.com/kubikulek231/nas/refs/heads/master/nfs/enable-nfs-client.ps1"
+               target="_blank" rel="noopener">
+              enable-nfs-client.ps1
+            </a>
+          </p>
+          <p>
+            Press the Start button, type <code>powershell</code>, right-click the first result,
+            and select <b>Run as administrator</b>.
+          </p>
+          <p>
+            Use <code>cd</code> to navigate to the script location, then run
+            <code>.\enable-nfs-client.ps1</code>. When it finishes, press Enter to restart
+            your computer.
+          </p>
+        </div>
+
+        <div class="guide-step">
+          <h3>2. Mount the drives</h3>
+          <p>
+            Open a normal <b>Command Prompt</b> (do not run it as administrator).
+          </p>
+          <p>
+            Run:
+            <code>mount SERVER_IP_OR_NAME:/DIRECTORY WINDOWS_LETTER:</code><br>
+            Example:
+            <code>mount 192.168.1.230:/srv/data Z:</code>.
+          </p>
+          <p class="note">
+            You can unmount an NFS drive with:
+            <code>umount LETTER:</code>.
+          </p>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
       <span>NAS Hub</span>
       <span class="dot">&bull;</span>
-      <span><a href="https://github.com/kubikulek231/nas" target="_blank" rel="noopener">GitHub repository</a></span>
+      <span>
+        <a href="https://github.com/kubikulek231/nas" target="_blank" rel="noopener">
+          GitHub repository
+        </a>
+      </span>
     </footer>
   </div>
 </body>
