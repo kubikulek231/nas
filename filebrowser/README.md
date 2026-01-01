@@ -1,79 +1,104 @@
 Go back to [Index](./../README.md)
 
-### Filebrowser
+### FileBrowser Quantum
 
-This file provides guidance on how filebrowser tool for browsing the NAS files using plain browser from given ip address is set up.
+This file provides guidance on how FileBrowser Quantum tool for browsing the NAS files using plain browser from given ip address is set up.
 
 Any user within the network can access any files from any device 📱💻 easilly from this place.
 
 ### Set-up steps
 
-1. Download and extract filebrowser binary from https://github.com/filebrowser/filebrowser/releases to /opt/filebrowser and place the binary in /usr/local/bin.
-
-     ```bash
-     # Go to https://github.com/filebrowser/filebrowser/releases and get exact link by right clicking correct file and copying it.
-     # Linux AMD64
-     sudo mkdir -p /opt/filebrowser &
-     sudo wget <release-url> -O /opt/filebrowser filebrowser.tar.gz &
-     sudo tar -xf /opt/filebrowser/filebrowser.tar.gz -C /opt/filebrowser
-     sudo mv /opt/filebrowser/filebrowser /usr/local/bin/filebrowser
-     sudo chmod +x /usr/local/bin/filebrowser
-     ```
-
-2. Create service user and DB dir
+1. Download and extract filebrowser binary from https://github.com/gtsteffaniak/filebrowser/releases to `/opt/filebrowser` and place the binary in `/usr/local/bin`.
    ```bash
-   sudo useradd --system --no-create-home --shell /usr/sbin/nologin filebrowser
-   sudo mkdir -p /var/lib/filebrowser
-   sudo chown -R filebrowser:filebrowser /var/lib/filebrowser
+   # Go to https://github.com/gtsteffaniak/filebrowser/releases and get exact link by right clicking correct file and copying it.
+   # Linux AMD64
+   sudo mkdir -p /opt/filebrowser
+   # Download the binary
+   sudo wget https://github.com/gtsteffaniak/filebrowser/releases/download/v1.1.0-stable/linux-amd64-filebrowser -O /usr/local/bin/filebrowser
+
+   # Make it runnable
+   sudo chmod +x /usr/local/bin/filebrowser
+   ```
+2. Install FFmpeg
+   ```bash
+   sudo apt install ffmpeg
+   ```
+
+3. Set-up Filebrowser config at `/opt/filebrowser/config.yaml`
+   ```bash
+   sudo nano /opt/filebrowser/config.yaml
+   ```
+
+   Paste following or use the full config `config.yaml` next to this README:
+
+   ```yml
+   server:
+   sources:
+      - path: "/srv/data"
+         config:
+         defaultEnabled: true  
+         # Give access to all users by default
+
+   auth:
+   adminUsername: admin
+   adminPassword: admin
+   ```
+
+3. Create service user and DB dir
+   ```bash
+   sudo useradd filebrowser
+   sudo mkdir -p /opt/filebrowser
+   sudo chown filebrowser:filebrowser /opt/filebrowser
+
+   sudo usermod -aG sudo filebrowser
+   ```
+
+4. Chown config
+   ```bash
+   sudo chown filebrowser:filebrowser /opt/filebrowser/config.yaml
+   sudo chown filebrowser:filebrowser /opt/filebrowser/
+   sudo chown filebrowser:filebrowser /opt/filebrowser/filebrowser
    ```
 
 3. Create systemd service. A file for running the filebrowser as service needs to be created. One can use nano:
    ```bash
-   nano /etc/systemd/system/filebrowser.service
+   sudo nano /etc/systemd/system/filebrowser.service
    ```
    And copy and save contents of the file available next to this README.
 
 4. Start the daemon
    ```bash
    sudo systemctl daemon-reload
-   sudo systemctl enable --now filebrowser
+   sudo systemctl enable filebrowser
+   sudo systemctl start filebrowser
    ```
 
-5. Find initial admin password (first run)
-   - Filebrowser prints the initial admin info to the daemon logs. Check and save it immediately:
-     ```bash
-     sudo journalctl -u filebrowser -f    # follow logs live
-     sudo journalctl -u filebrowser --no-pager | tail -n 200 | grep -i admin
-     ```
-   - Save the password in a secure place (password manager or encrypted note).
-
-6. Create users
-   - Get IP using `ip addr` command.
-   - Recommended: use the web UI (http://SERVER_IP:8080) to set precise permissions:
-     - admin: full access (or admin role)
-     - guest: scope = / (or mount), enable read + write (create/upload/rename), disable delete
-   - Users can be created using CLI as well (NOT RECOMMENDED):
-      ```bash
-      sudo -u filebrowser /usr/local/bin/filebrowser users list
-      sudo -u filebrowser /usr/local/bin/filebrowser users add admin 'StrongAdminPass'
-      sudo -u filebrowser /usr/local/bin/filebrowser users add guest 'GuestPass'
-      ```
-
-7. Verify
+7. Verify; get IP and visit the webpage:
    ```bash
-   sudo -u filebrowser /usr/local/bin/filebrowser users list
-   sudo -u filebrowser ls -la /mnt/data1   # or your mountpoint
+   ip addr
    ```
+
+   Go to `http://SERVER_IP:8080`, you can now login as admin:admin.
 
 8. Recovery / reset (if something fails or password is lost)
-   - Stop service, remove DB to force a fresh initial admin creation, then start again:
+   
+   Stop service, remove DB to force a fresh initial admin creation, then start again:
      ```bash
      sudo systemctl stop filebrowser # Stop the service
      sudo rm -f /var/lib/filebrowser/filebrowser.db # Remove the DB with users
      sudo systemctl start filebrowser # Fire up the service again
      ```
-   - After restart check the logs for the new initial admin password and repeat user creation. This resets users/settings stored in the DB.
+   After restart check the logs for the new initial admin password and repeat user creation. This resets users/settings stored in the DB.
 
->Notes
->- Use web UI for fine-grained permission toggles; POSIX ACLs/groups manage filesystem-level access and do not substitute filebrowser's per-user delete/create controls.
->- Keep the DB path documented and backed up if you want persistent user data.
+### Set-up permissions
+
+1. Add the filebrowser user to `nasusergroup`.
+   ```bash
+   sudo usermod -aG nasusergroup filebrowser
+   ```
+
+   This allows filebrowser to view all the files by users but they can not be deleted by users. Feel like this is bad, so let's setup ACL so anyone from nasusergroup or nasadmingroup can delete stuff created by filebrowser user within `/srv/data` tree:
+
+   ```bash
+   TODO
+   ```

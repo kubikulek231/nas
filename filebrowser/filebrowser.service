@@ -1,13 +1,12 @@
 [Unit]
-Description=File Browser
+Description=FileBrowser Quantum
 After=network.target
 
 [Service]
+Type=simple
 User=filebrowser
-Group=filebrowser
-# listen on all interfaces, port 8080, use /var/lib/filebrowser as root and DB location
-ExecStart=/usr/local/bin/filebrowser --address 0.0.0.0 -p 8080 -r /var/lib/filebrowser --database /var/lib/filebrowser/filebrowser.db
-WorkingDirectory=/var/lib/filebrowser
+WorkingDirectory=/opt/filebrowser
+ExecStart=/usr/local/bin/filebrowser -c /opt/filebrowser/config.yaml
 Restart=on-failure
 
 [Install]

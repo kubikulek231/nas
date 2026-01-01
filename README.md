@@ -5,11 +5,10 @@ This repository tracks development and a setup of a DIY ODROID H4 NAS 📦.
 ### Index
 1. [Initial Setup](#initial-setup)
 2. [ZFS - Filesystem](./zfs/README.md)
-3. [Network](./network/README.md)
-4. [Smb](./smb/README.md)
-5. [Filebrowser](./filebrowser/README.md)
-6. [Jellyfin](./jellyfin/README.md)
-7. [Torrent](./torrent/README.md)
+3. [Smb](./smb/README.md)
+4. [Filebrowser](./filebrowser/README.md)
+5. [Jellyfin](./jellyfin/README.md)
+6. [Torrent](./torrent/README.md)
 
 > Follow the steps in an organized manner, beginning with 1 ☺️.
 
