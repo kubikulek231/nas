@@ -157,3 +157,9 @@ a:hover {
     font-size: 1.5rem;
   }
 }
+
+.endpoint-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}

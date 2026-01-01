@@ -19,12 +19,16 @@
     <main class="content">
       <section class="card">
         <h2>Overview</h2>
-        <p>
-          Local DNS name:
-          <span class="endpoint">{{ server_name }}</span>
-          IP address:
-          <span class="endpoint">{{ server_ip }}</span>
-        </p>
+          <div class="endpoint-container">
+          <p>
+            Local DNS name:
+            <span class="endpoint">{{ server_name }}</span>
+          </p>
+          <p>
+            IP address:
+            <span class="endpoint">{{ server_ip }}</span>
+          </p>
+        </div>
       </section>
 
       <section class="card">
