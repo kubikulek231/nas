@@ -1,0 +1,14 @@
+.guide-step {
+  background-color: rgba(255, 255, 255, 0.171);
+}
+
+.guide-image-container {
+  max-width: 100%;
+  position: relative;
+}
+
+.guide-image-container img {
+  max-width: 100%;
+  height: auto;
+  display: block; /* optional, removes inline-gap */
+}

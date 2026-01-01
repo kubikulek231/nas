@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='storage.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='browser.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='guides.css') }}">
 </head>
 <body>
   <div class="page">
@@ -34,7 +35,7 @@
       <section class="card">
         <h2>Web File Browser</h2>
         <p class="note">
-          Use the built‑in <b>FileBrowser Quantum</b> from any browser or device.
+          Use the built-in <b>FileBrowser Quantum</b> from any browser or device.
         </p>
 
         <div class="button button-primary"
@@ -90,8 +91,10 @@
           Open File Explorer, select <b>This PC</b>, then on the toolbar choose
           <b>More options</b> (three dots) and click <b>Map network drive…</b>.
         </p>
+        <div class="guide-image-container">
           <img src="/static/smb-guide/add-network-drive.png"
                alt="Windows File Explorer showing the Map network drive option">
+        </div>
         </div>
 
         <div class="guide-step">
@@ -100,8 +103,10 @@
             In the wizard, choose a drive letter and enter the network path in the form
             <code>\\SERVER_IP_OR_NAME\DIRECTORY</code>.
           </p>
-          <img src="/static/smb-guide/enter-url.png"
-               alt="Windows dialog for entering the network folder path">
+          <div class="guide-image-container">
+            <img src="/static/smb-guide/enter-url.png"
+                alt="Windows dialog for entering the network folder path">
+          </div>
         </div>
 
         <div class="guide-step">
@@ -110,8 +115,10 @@
             When prompted, enter your NAS username and password and enable
             <b>Remember my credentials</b>.
           </p>
-          <img src="/static/smb-guide/enter-credentials.png"
-               alt="Windows credentials dialog for network share">
+          <div class="guide-image-container">
+            <img src="/static/smb-guide/enter-credentials.png"
+                alt="Windows credentials dialog for network share">
+          </div>
         </div>
       </section>
 
