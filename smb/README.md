@@ -12,12 +12,11 @@ Prereqs
 Quick overview
 1. Create directories and bind-mounts.
 2. Create groups and users.
-3. Install ACL utilities.
 4. Lock parent directory so only root can create/delete entries.
-5. Grant needed rights inside child directories via ACLs, setgid and sticky bit.
+5. Grant needed rights inside child directories via ACLs, setgid.
 6. Verify.
 
-Step-by-step
+### Create Dirs and Permissions
 
 1) Create hub and mountpoints
     ```bash
@@ -35,16 +34,16 @@ Step-by-step
 2) Create groups and users
     ```bash
     # groups
-    sudo groupadd nasadmingroup
+    sudo groupadd nasguestgroup
     sudo groupadd nasusergroup
 
     # users (example)
-    sudo adduser nasadmin
+    sudo adduser nasuser
     sudo adduser nasguest
 
     # add users to groups
-    sudo usermod -aG nasadmingroup nasadmin
-    sudo usermod -aG nasusergroup nasguest
+    sudo usermod -aG nasusergroup nasuser
+    sudo usermod -aG nasguestgroup nasguest
     ```
 
 3) Base ownership and classic perms (make parent root-only writable)
@@ -54,19 +53,19 @@ This is the primary guard: deleting a directory entry requires write on its pare
     sudo chown root:root /srv/data
     sudo chmod 0755 /srv/data
 
-    # ensure children exist and are owned by root:nasadmingroup
+    # ensure children exist and are owned by root:nasusergroup
     sudo mkdir -p /srv/data/safe /srv/data/fast
-    sudo chown root:nasadmingroup /srv/data/safe /srv/data/fast
+    sudo chown root:nasusergroup /srv/data/safe /srv/data/fast
 
-    # setgid so new objects inherit group; sticky bit to prevent non-owners deleting others' files
+    # Classic permissions: only owner+group write; others read/execute only
     sudo chmod 2775 /srv/data/safe /srv/data/fast
-    sudo chmod +t /srv/data/safe /srv/data/fast
+    # 2 = setgid so group on new files/dirs stays nasusergroup
     ```
 
     SMB quick setup (concise)
     ```bash
     sudo apt install -y samba samba-common-bin
-    sudo smbpasswd -a nasadmin
+    sudo smbpasswd -a nasuser
     sudo smbpasswd -a nasguest
     ```
     Example `/etc/samba/smb.conf` share:
@@ -75,11 +74,31 @@ This is the primary guard: deleting a directory entry requires write on its pare
     path = /srv/data
     browseable = yes
     read only = no
-    valid users = @nasadmingroup @nasusergroup
+    valid users = @nasguestgroup @nasusergroup
     ```
     > Full file `smb.conf` is available next to this readme.
 
     Restart Samba:
     ```bash
     sudo systemctl restart smbd nmbd
+    ```
+
+### Guest Directory
+
+Guests can write to this dir too, but users can delete what they create. 
+
+
+2. Setup the dir and permissions:
+    ```bash
+    # create the directory
+    sudo mkdir -p /srv/data/guest
+
+    # make root the owner and nasguestgroup the directory group
+    sudo chown root:nasguestgroup /srv/data/guest
+
+    sudo chmod 2775 /srv/data/guest                  # rwx for user/group, r-x for others
+
+    # Add nasuser to guest group
+    sudo usermod -aG nasguestgroup nasuser
+    sudo usermod -aG nasguestgroup nasguest
     ```
