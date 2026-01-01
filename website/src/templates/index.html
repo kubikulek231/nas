@@ -5,13 +5,14 @@
   <title>NAS Hub</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='storage.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='browse.css') }}">
 </head>
 <body>
   <div class="page">
     <header class="header">
       <h1>NAS Hub</h1>
       <p class="subtitle">
-        Simple landing page for our NAS📦: view key details, open the web file browser, and check storage usage.
+        Welcome to a simple landing page for our NAS📦.
       </p>
     </header>
 
@@ -29,15 +30,16 @@
       </section>
 
       <section class="card">
-        <h2>File browser</h2>
+        <h2>Web File Browser</h2>
         <p class="note">
-          Manage files on the NAS via the built-in FileBrowser Quantum interface using browser🌐 and device💻📱 of your choice.
+          Use built-in <b>FileBrowser Quantum</b> with browser and device of your choice.
         </p>
-        <p>
-          <a class="button" href="{{ base_url }}:8080" target="_blank" rel="noopener">
-            Open file browser
-          </a>
-        </p>
+        <a class="button button-primary"
+          href="{{ base_url }}:8080"
+          target="_blank"
+          rel="noopener">
+          Browse Now
+        </a>
         <p>
           Web UI endpoint:
           <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
