@@ -31,6 +31,7 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.33);
   transition: background-color 0.6s ease; /* key line */
+  border-radius: 10px;
 }
 
 .image-overlay:hover {
