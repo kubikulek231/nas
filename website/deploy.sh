@@ -26,6 +26,12 @@ sudo systemctl daemon-reload   # required after changing unit files[web:92][web:
 
 echo "[deploy] Restarting service ${SERVICE_NAME} ..."
 sudo systemctl restart "${SERVICE_NAME}"
+
+echo "[deploy] You can view lastly logged by 'sudo journalctl -u nashub-website.service -n 50 --no-pager -f'"
+
+echo "[deploy] Sleeping for 5 seconds..."
+sleep 5
+
 sudo systemctl status "${SERVICE_NAME}" --no-pager --lines=5
 
 echo "[deploy] Done."
