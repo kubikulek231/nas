@@ -9,62 +9,72 @@
 <body>
   <div class="page">
     <header class="header">
-      <h1>Welcome to your NAS</h1>
-      <p class="subtitle">A simple hub for your home storage</p>
+      <h1>NAS Hub</h1>
+      <p class="subtitle">
+        Simple landing page for our NAS📦: view key details, open the web file browser, and check storage usage.
+      </p>
     </header>
 
     <main class="content">
       <section class="card">
-        <h2>Browse your files</h2>
-
+        <h2>Overview</h2>
         <p>
-          NAS IP address:
+          Local DNS name:
+          <span class="endpoint">{{ server_name }}</span>
+        </p>
+        <p>
+          IP address:
           <span class="endpoint">{{ server_ip }}</span>
-          (DNS name:
-          <span class="endpoint">{{ server_name }}</span>)
-        </p>
-
-        <p>
-          Your NAS files are fully browsable at
-          <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
-            {{ base_url }}:8080
-          </a>.
-        </p>
-
-        <p class="note">
-          Use this page as a starting point. Mounting tutorials for SMB and NFS,
-          example scripts, and more will be added here later.
         </p>
       </section>
 
-    <section class="card">
-      <h2>Storage usage</h2>
-      <ul class="storage-list">
-        {% for name, d in disks.items() %}
-          <li class="storage-item">
-            <div class="storage-header">
-              <span>{{ name|capitalize }} ({{ d.path }})</span>
-              <span>
-                {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
-                ({{ "%.1f"|format(d.percent) }}% used)
-              </span>
-            </div>
+      <section class="card">
+        <h2>File browser</h2>
+        <p class="note">
+          Manage files on the NAS via the built-in FileBrowser Quantum interface using browser🌐 and device💻📱 of your choice.
+        </p>
+        <p>
+          <a class="button" href="{{ base_url }}:8080" target="_blank" rel="noopener">
+            Open file browser
+          </a>
+        </p>
+        <p>
+          Web UI endpoint:
+          <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
+            {{ base_url }}:8080
+          </a>
+        </p>
+      </section>
 
-            <div class="storage-bar">
-              <div class="storage-bar-fill"
-                  style="width: {{ d.percent }}%;"></div>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
+      <section class="card">
+        <h2>Storage usage</h2>
+        <ul class="storage-list">
+          {% for name, d in disks.items() %}
+            <li class="storage-item">
+              <div class="storage-header">
+                <span>{{ name|capitalize }} ({{ d.path }})</span>
+                <span>
+                  {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+                  ({{ "%.1f"|format(d.percent) }}% used)
+                </span>
+              </div>
 
+              <div class="storage-bar">
+                <div
+                  class="storage-bar-fill"
+                  style="width: {{ d.percent }}%;"
+                ></div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
     </main>
 
     <footer class="footer">
       <span>NAS Hub</span>
       <span class="dot">&bull;</span>
-      <span>Self‑hosted storage</span>
+      <span><a href="https://github.com/kubikulek231/nas" target="_blank" rel="noopener">GitHub repository</a></span>
     </footer>
   </div>
 </body>

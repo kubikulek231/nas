@@ -28,7 +28,7 @@ html, body {
 
 body {
   font-family: var(--font-main);
-  background: radial-gradient(circle at top left, #1d2437, #050816 55%, #020617);
+  background: radial-gradient(circle at top left, #1d372e, #050816 55%, #021712);
   color: var(--text);
   display: flex;
   align-items: center;
@@ -80,7 +80,7 @@ body {
 .card {
   background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%),
               rgba(15, 23, 42, 0.96);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-md / 2);
   padding: 18px 20px 20px;
   border: 1px solid rgba(148, 163, 184, 0.3);
   box-shadow: var(--shadow-card);
