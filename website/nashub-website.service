@@ -3,7 +3,7 @@ Description=NAS Hub (Flask via gunicorn)
 After=network.target
 
 [Service]
-User=nas
+User=root
 WorkingDirectory=/srv/website
 ExecStart=/usr/bin/gunicorn -w 2 -b 0.0.0.0:80 app:app
 Restart=on-failure
