@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>NAS Hub</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='storage.css') }}">
 </head>
 <body>
   <div class="page">
@@ -36,14 +37,23 @@
         </p>
       </section>
 
-      <section class="card">
+    <section class="card">
       <h2>Storage usage</h2>
-      <ul>
+      <ul class="storage-list">
         {% for name, d in disks.items() %}
-          <li>
-            {{ name|capitalize }} ({{ d.path }}):
-            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
-            ({{ "%.1f"|format(d.percent) }}% used)
+          <li class="storage-item">
+            <div class="storage-header">
+              <span>{{ name|capitalize }} ({{ d.path }})</span>
+              <span>
+                {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+                ({{ "%.1f"|format(d.percent) }}% used)
+              </span>
+            </div>
+
+            <div class="storage-bar">
+              <div class="storage-bar-fill"
+                  style="width: {{ d.percent }}%;"></div>
+            </div>
           </li>
         {% endfor %}
       </ul>
