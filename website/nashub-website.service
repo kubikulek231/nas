@@ -1,0 +1,12 @@
+[Unit]
+Description=NAS Hub (Flask via gunicorn)
+After=network.target
+
+[Service]
+User=nas
+WorkingDirectory=/srv/website
+ExecStart=/usr/bin/python3 /usr/bin/gunicorn -w 2 -b 0.0.0.0:5000 app:app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
