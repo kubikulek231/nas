@@ -95,10 +95,8 @@ Any user within the network can access any files from any device 📱💻 easill
 1. Add the filebrowser user to `nasusergroup`.
    ```bash
    sudo usermod -aG nasusergroup filebrowser
+   sudo usermod -aG nasguestgroup filebrowser
    ```
+   > This allows filebrowser to create and delete files.
 
-   This allows filebrowser to view all the files by users but they can not be deleted by users. Feel like this is bad, so let's setup ACL so anyone from nasusergroup or nasadmingroup can delete stuff created by filebrowser user within `/srv/data` tree:
-
-   ```bash
-   TODO
-   ```
+2. Create accounts by logging in as admin:admin. Set passwords.

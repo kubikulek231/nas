@@ -1,6 +1,7 @@
 [Unit]
 Description=FileBrowser Quantum
-After=network.target
+After=network.target local-fs.target srv-data.mount
+Requires=srv-data.mount
 
 [Service]
 Type=simple

@@ -1,12 +1,27 @@
 server:
   port: 8080
-  baseURL:  "/"
-  logging:
-    - levels: "info|warning|error"
+  baseURL: "/"
   sources:
     - path: "/srv/data"
+      name: "Data HUB"
+      config:
+        defaultEnabled: true
+
     - path: "/srv/data/safe"
+      name: "SAFE Storage (Mirrored)"
+      config:
+        defaultEnabled: true
+
     - path: "/srv/data/fast"
+      name: "FAST Storage (NVME)"
+      config:
+        defaultEnabled: true
+
+    - path: "/srv/data/guest"
+      name: "Guest Writable"
+      config:
+        defaultEnabled: true
+
 userDefaults:
   editorQuickSave: false                  # show quick save button in editor
   hideSidebarFileActions: false           # hide the file actions in the sidebar

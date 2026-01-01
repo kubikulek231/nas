@@ -16,20 +16,34 @@ Summary of expected local accounts (created during SMB setup)
     sudo apt update
     sudo apt install -y nfs-kernel-server
     ```
+
+2) List UIDs and GIDs:
+    ```bash
+    getent passwd | awk -F: '($3 >= 1000 && $3 <= 2000)'
+    getent group | awk -F: '($3 >= 1000 && $3 <= 2000)'
+
+    # Get concrete IDs
+    id nasuser
+    id nasguest
+
+    groups nasuser
+    groups nasguest
+    ```
+
 2) Edit `/etc/exports` entries (replace NETWORK with your network, e.g. 192.168.1.0/24):
 
     ```bash
     # per-user, UID/GID enforced, root squashed
-    /srv/data/safe 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
-    /srv/data/fast 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
-    /srv/data      192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)
+    /srv/data/safe 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)
+    /srv/data/fast 192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)
+    /srv/data      192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)
     ```
 
     You can do it by for example running these commands:
     ```bash
-    echo "/srv/data/safe    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
-    echo "/srv/data/fast    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
-    echo "/srv/data    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1002,anongid=1005)" | sudo tee -a /etc/exports
+    echo "/srv/data/safe    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)" | sudo tee -a /etc/exports
+    echo "/srv/data/fast    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)" | sudo tee -a /etc/exports
+    echo "/srv/data/guest    192.168.1.0/24(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1007)" | sudo tee -a /etc/exports
     ```
 
 3) Apply exports

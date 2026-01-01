@@ -57,7 +57,6 @@ This is the primary guard: deleting a directory entry requires write on its pare
     sudo mkdir -p /srv/data/safe /srv/data/fast
     sudo chown root:nasusergroup /srv/data/safe /srv/data/fast
 
-    # Classic permissions: only owner+group write; others read/execute only
     sudo chmod 2775 /srv/data/safe /srv/data/fast
     # 2 = setgid so group on new files/dirs stays nasusergroup
     ```
@@ -94,11 +93,25 @@ Guests can write to this dir too, but users can delete what they create.
     sudo mkdir -p /srv/data/guest
 
     # make root the owner and nasguestgroup the directory group
-    sudo chown root:nasguestgroup /srv/data/guest
+    sudo chown root:nasusergroup /srv/data/guest
 
     sudo chmod 2775 /srv/data/guest                  # rwx for user/group, r-x for others
 
     # Add nasuser to guest group
     sudo usermod -aG nasguestgroup nasuser
     sudo usermod -aG nasguestgroup nasguest
+    ```
+
+3. Install ACL:
+    ```bash
+    sudo apt install acl
+    ```
+
+4. Setup ACL so nasguestgroup can write in /guest:
+    ```bash
+    # give nasguestgroup rwx on the directory
+    sudo setfacl -m g:nasguestgroup:rwx /srv/data/guest
+
+    # set default ACL so new files/dirs inherit rwx for nasguestgroup
+    sudo setfacl -d -m g:nasguestgroup:rwx /srv/data/guest
     ```
