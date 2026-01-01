@@ -1,5 +1,11 @@
 .guide-step {
-  background-color: rgba(255, 255, 255, 0.171);
+  background-color: rgba(9, 13, 19, 0.8);
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .guide-image-container {
@@ -11,4 +17,5 @@
   max-width: 100%;
   height: auto;
   display: block; /* optional, removes inline-gap */
+  margin: auto;
 }
