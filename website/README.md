@@ -10,11 +10,21 @@ Go back to [Index](./../README.md)
     # Setup Python Repo
     sudo apt install software-properties-common
     sudo add-apt-repository ppa:deadsnakes/ppa
-    # Install Python
-    sudo apt install python3.13
-    # Install System-Wide Flask
-    sudo apt install python3-flask
-    pip install gunicorn
+
+    # Install Python 3.x and venv module
+    sudo apt install -y python3.13 python3.13-venv
+
+    # Create a venv in /home/nas/.venv
+    python3.13 -m venv /home/nas/.venv
+
+    # Activate it
+    source /home/nas/.venv/bin/activate
+
+    # Install Flask and Gunicorn into the venv
+    pip install Flask gunicorn
+
+    # Install zpool-status into the venv
+    pip install zpool-status
     ```
 
 2. Copy app.py, index.html and style.css from this repository directory to `/srv/website` and:
@@ -29,14 +39,9 @@ Go back to [Index](./../README.md)
 
 3. Setup production website:
 
-    Install gunicorn system-wide:
-    ```bash
-    sudo apt install gunicorn
-    ```
-
     Allow gunicorn to access the usual HTTP (80) port:
     ```bash
-    sudo setcap 'cap_net_bind_service=+ep' /usr/bin/gunicorn
+    sudo setcap 'cap_net_bind_service=+ep' /home/nas/.venv/bin/gunicorn
     ```
 
     Create the systemd webserver service by using:

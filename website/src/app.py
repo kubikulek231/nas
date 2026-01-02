@@ -1,6 +1,8 @@
 import os
 import shutil
 from flask import Flask, render_template
+import json
+from zpool_status import ZPool
 
 app = Flask(__name__)
 
@@ -8,8 +10,13 @@ SERVER_IP = os.environ["SERVER_IP"]
 SERVER_NAME = os.environ["SERVER_NAME"]
 BASE_URL = os.environ.get("BASE_URL", f"http://{SERVER_IP}")
 
+def get_zfs_status(pool_name):
+    zpool = ZPool(pool_name, options=["-v"])  # -v if you want verbose like zpool status -v
+    status = zpool.get_status()               # this is already a Python dict
+    return status
+
 def disk_usage_gib(path):
-    total, used, free = shutil.disk_usage(path)  # bytes[web:175][web:196]
+    total, used, free = shutil.disk_usage(path)
     return {
         "path": path,
         "total_gib": total / (1024**3),
@@ -21,10 +28,13 @@ def disk_usage_gib(path):
 @app.route("/")
 def home():
     disks = {
-        "hub": disk_usage_gib("/srv/data"),
-        "safe": disk_usage_gib("/srv/data/safe"),
-        "fast": disk_usage_gib("/srv/data/fast"),
-    }  # Each path resolves to its underlying filesystem/mount.[web:194][web:179]
+        "hub": {**disk_usage_gib("/srv/data"), "note": "Main HUB"},
+        "safetank": {**disk_usage_gib("/safetank/data/"), "note": "ZFS mirror"},
+        "fasttank": {**disk_usage_gib("/fasttank/data/"), "note": "ZFS scratch"},
+    }
+
+    safetank_status = get_zfs_status("safetank")
+    fasttank_status = get_zfs_status("fasttank")
 
     return render_template(
         "index.html",
@@ -32,4 +42,6 @@ def home():
         server_name=SERVER_NAME,
         base_url=BASE_URL,
         disks=disks,
+        safetank_status=safetank_status,
+        fasttank_status=fasttank_status,
     )

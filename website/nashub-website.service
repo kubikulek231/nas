@@ -5,7 +5,10 @@ After=network.target
 [Service]
 User=root
 WorkingDirectory=/srv/website
-ExecStart=/usr/bin/gunicorn -w 2 -b 0.0.0.0:80 app:app
+
+# Point to gunicorn inside the venv
+ExecStart=/home/nas/.venv/bin/gunicorn -w 2 -b 0.0.0.0:80 app:app
+
 Restart=on-failure
 
 Environment="SERVER_IP=192.168.1.230"

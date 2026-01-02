@@ -25,9 +25,11 @@ Quick overview
     sudo mkdir -p /srv/data/safe
     sudo mkdir -p /srv/data/fast
 
-    # example bind mounts for ZFS datasets
-    echo '/safetank/data /srv/data/safe none bind 0 0' | sudo tee -a /etc/fstab
-    echo '/fasttank/data /srv/data/fast none bind 0 0' | sudo tee -a /etc/fstab
+    # example bind mounts for ZFS datasets with proper ordering in /etc/fstab
+    echo '/safetank/data /srv/data/safe none bind,x-systemd.requires=zfs-mount.service,x-systemd.after=zfs-mount.service 0 0' | sudo tee -a /etc/fstab
+    echo '/fasttank/data  /srv/data/fast none bind,x-systemd.requires=zfs-mount.service,x-systemd.after=zfs-mount.service 0 0' | sudo tee -a /etc/fstab
+
+    sudo systemctl daemon-reload
     sudo mount -a
     ```
 
