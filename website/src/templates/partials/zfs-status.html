@@ -1,0 +1,60 @@
+{% if d.zfs %}
+  {# Overall state line #}
+  <p class="note" data-lang="en">
+    ZFS state:
+    <strong class="{{ 'ok' if d.zfs.healthy else 'bad' }}">
+      {{ d.zfs.state }}
+    </strong>
+  </p>
+  <p class="note" data-lang="cs">
+    Stav ZFS:
+    <strong class="{{ 'ok' if d.zfs.healthy else 'bad' }}">
+      {{ d.zfs.state }}
+    </strong>
+  </p>
+
+  {# Optional: status / action summary #}
+  {% if d.zfs.status %}
+    <p class="note" data-lang="en">
+      {{ d.zfs.status }}
+    </p>
+    <p class="note" data-lang="cs">
+      {{ d.zfs.status }}
+    </p>
+  {% endif %}
+
+  {% if d.zfs.action %}
+    <p class="note" data-lang="en">
+      Suggested action: {{ d.zfs.action }}
+    </p>
+    <p class="note" data-lang="cs">
+      Doporučený postup: {{ d.zfs.action }}
+    </p>
+  {% endif %}
+
+  {# Optional: scrub info #}
+  {% if d.zfs.scrub %}
+    <p class="note" data-lang="en">
+      Last scrub: {{ d.zfs.scrub }}
+    </p>
+    <p class="note" data-lang="cs">
+      Poslední scrub: {{ d.zfs.scrub }}
+    </p>
+  {% endif %}
+
+  {# Per-device problems #}
+  {% if d.zfs.bad_devices %}
+    <ul class="note">
+      {% for dev in d.zfs.bad_devices %}
+        <li data-lang="en">
+          Device {{ dev.name }}: {{ dev.state }}
+          (R {{ dev.read }}, W {{ dev.write }}, CKSUM {{ dev.cksum }})
+        </li>
+        <li data-lang="cs">
+          Zařízení {{ dev.name }}: {{ dev.state }}
+          (čtení {{ dev.read }}, zápis {{ dev.write }}, CKSUM {{ dev.cksum }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endif %}
