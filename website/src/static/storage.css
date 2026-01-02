@@ -1,15 +1,14 @@
 .storage-list {
+  display: flex;
   list-style: none;
+  flex-direction: column;
   margin: 0;
   padding: 0;
+  gap: 10px;
 }
 
 .storage-item {
-  margin-bottom: 1rem;
-}
-
-.zfs-storage-item {
-  
+  margin-bottom: 0rem;
 }
 
 .storage-header {

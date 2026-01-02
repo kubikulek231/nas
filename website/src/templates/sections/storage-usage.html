@@ -21,14 +21,13 @@
       <div class="storage-bar">
         <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
       </div>
-      <p class="note">{{ d.note }}</p>
     </li>
 
     {# SAFETANK WITH ZFS STATUS #}
     {% set d = disks.safetank %}
     <li class="storage-item zfs-storage-item">
       <div class="storage-header">
-        <span>ZFS Pool: Safetank ({{ d.path }})</span>
+        <span><b>ZFS Pool:</b> Safetank ({{ d.path }})</span>
         <span data-lang="en">
           {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
           ({{ "%.1f"|format(d.percent) }}% used)
@@ -52,7 +51,7 @@
     {% set d = disks.fasttank %}
     <li class="storage-item zfs-storage-item">
       <div class="storage-header">
-        <span>ZFS Pool: Fasttank ({{ d.path }})</span>
+        <span><b>ZFS Pool:</b> Fasttank ({{ d.path }})</span>
         <span data-lang="en">
           {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
           ({{ "%.1f"|format(d.percent) }}% used)

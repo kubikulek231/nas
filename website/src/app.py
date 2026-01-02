@@ -9,7 +9,7 @@ app = Flask(__name__)
 SERVER_IP = os.environ["SERVER_IP"]
 SERVER_NAME = os.environ["SERVER_NAME"]
 BASE_URL = os.environ.get("BASE_URL", f"http://{SERVER_IP}")
-MOCK_ZFS = True
+MOCK_ZFS = False
 
 def summarize_pool(pool_name):
     if MOCK_ZFS:
