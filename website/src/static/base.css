@@ -115,7 +115,7 @@ a[href]:focus-visible {
 }
 
 /* Chip-style links (override the global rule) */
-a[href].endpoint {
+.endpoint {
   display: inline-flex;
   align-items: center;
   padding: 2px 7px;
@@ -129,8 +129,8 @@ a[href].endpoint {
   text-decoration: none;
 }
 
-a[href].endpoint:hover,
-a[href].endpoint:focus-visible {
+.endpoint:hover,
+.endpoint:focus-visible {
   text-decoration: none;
 }
 
