@@ -8,6 +8,10 @@
   margin-bottom: 1rem;
 }
 
+.zfs-storage-item {
+  
+}
+
 .storage-header {
   display: flex;
   justify-content: space-between;

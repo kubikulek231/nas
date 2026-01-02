@@ -112,12 +112,12 @@ def home():
         },
         "safetank": {
             **disk_usage_gib("/safetank/data/"),
-            "note": "ZFS mirror",
+            "note": None,
             "zfs": safetank_status,
         },
         "fasttank": {
             **disk_usage_gib("/fasttank/data/"),
-            "note": "ZFS scratch",
+            "note": None,
             "zfs": fasttank_status,
         },
     }
