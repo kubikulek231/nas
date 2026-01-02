@@ -185,3 +185,31 @@ a[href]:focus-visible {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+
+/* Default to English */
+[data-lang="cs"] {
+  display: none;
+}
+
+/* Language toggle buttons styling (adjust to taste) */
+.lang-toggle {
+  display: inline-flex;
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+
+.lang-btn.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
