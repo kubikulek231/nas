@@ -186,12 +186,6 @@ a[href]:focus-visible {
   font-size: 0.9rem;
 }
 
-
-/* Default to English */
-[data-lang="cs"] {
-  display: none;
-}
-
 /* Language toggle buttons styling (adjust to taste) */
 .lang-toggle {
   display: inline-flex;
