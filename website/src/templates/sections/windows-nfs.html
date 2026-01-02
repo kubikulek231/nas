@@ -2,88 +2,88 @@
   <h2 data-lang="en">Windows: NFS</h2>
   <h2 data-lang="cs">Windows: NFS</h2>
 
-  <p class="note" data-lang="en">
+  <div class="note" data-lang="en">
     Recommended for advanced users. NFS can provide higher transfer speeds.
     The NFS client feature is available only in specific Windows editions that include
     <b>Client for NFS</b> (Windows Server and Pro versions).
-  </p>
-  <p class="note" data-lang="cs">
+  </div>
+  <div class="note" data-lang="cs">
     Doporučeno pro pokročilé uživatele. NFS může nabídnout vyšší přenosové rychlosti.
     Funkce klienta NFS je dostupná jen v některých edicích Windows, které obsahují
     <b>Client for NFS</b> (Windows Server a Pro verze).
-  </p>
+  </div>
 
   <div class="guide-step">
     <h3 data-lang="en">1. Enable the NFS client</h3>
     <h3 data-lang="cs">1. Zapněte klienta NFS</h3>
 
-    <p data-lang="en">
+    <div data-lang="en">
       Download the Windows NFS client enable script:
       <a href="https://raw.githubusercontent.com/kubikulek231/nas/refs/heads/master/nfs/enable-nfs-client.ps1"
          download="enable-nfs-client.ps1">
         enable-nfs-client.ps1
       </a>
-    </p>
+    </div>
 
-    <p data-lang="cs">
+    <div data-lang="cs">
       Stáhněte skript pro zapnutí klienta NFS ve Windows:
       <a href="https://raw.githubusercontent.com/kubikulek231/nas/refs/heads/master/nfs/enable-nfs-client.ps1"
          download="enable-nfs-client.ps1">
         enable-nfs-client.ps1
       </a>
-    </p>
+    </div>
 
-    <p data-lang="en">
+    <div data-lang="en">
       Press the Start button, type <code>powershell</code>, right-click the first result,
       and select <b>Run as administrator</b>.
-    </p>
-    <p data-lang="cs">
+    </div>
+    <div data-lang="cs">
       Stiskněte tlačítko Start, napište <code>powershell</code>, klikněte pravým tlačítkem na první výsledek
       a zvolte <b>Spustit jako správce</b>.
-    </p>
+    </div>
 
-    <p data-lang="en">
+    <div data-lang="en">
       Use <code>cd</code> to navigate to the script location, then run
       <code>.\enable-nfs-client.ps1</code>. When it finishes, press Enter to restart
       your computer.
-    </p>
-    <p data-lang="cs">
+    </div>
+    <div data-lang="cs">
       Pomocí příkazu <code>cd</code> přejděte do složky se skriptem a spusťte
       <code>.\enable-nfs-client.ps1</code>. Po dokončení stiskněte Enter a restartujte počítač.
-    </p>
+    </div>
   </div>
 
   <div class="guide-step">
     <h3 data-lang="en">2. Mount the drives</h3>
     <h3 data-lang="cs">2. Připojte jednotky</h3>
 
-    <p data-lang="en">
+    <div data-lang="en">
       Open a normal <b>CMD</b> session (do not run it as administrator).
-    </p>
-    <p data-lang="cs">
+    </div>
+    <div data-lang="cs">
       Otevřete běžný <b>CMD</b> příkazový řádek (nespouštějte ho jako správce).
-    </p>
+    </div>
 
-    <p data-lang="en">
+    <div data-lang="en">
       Run:
       <code>mount SERVER_IP_OR_NAME:/DIRECTORY WINDOWS_LETTER:</code><br>
       Example:
       <code>mount 192.168.1.230:/srv/data Z:</code>.
-    </p>
-    <p data-lang="cs">
+    </div>
+    <div data-lang="cs">
       Spusťte příkaz:
       <code>mount SERVER_IP_NEBO_JMÉNO:/ADRESÁŘ PÍSMENO_VE_WINDOWS:</code><br>
       Příklad:
       <code>mount 192.168.1.230:/srv/data Z:</code>.
-    </p>
+    </div>
 
-    <p class="note" data-lang="en">
+    <div class="note" data-lang="en">
       You can unmount an NFS drive with:
       <code>umount LETTER:</code>.
-    </p>
-    <p class="note" data-lang="cs">
+    </div>
+    <div class="note" data-lang="cs">
       Jednotku NFS můžete odpojit příkazem:
       <code>umount PÍSMENO:</code>.
-    </p>
+    </div>
   </div>
 </section>

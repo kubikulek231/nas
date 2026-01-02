@@ -2,13 +2,13 @@
   <div class="zfs-status-block">
     {# Overall state line #}
     <p class="zfs-state" data-lang="en">
-      ZFS state:
+      State:
       <strong class="{{ 'zfs-status-ok' if d.zfs.healthy else 'zfs-status-bad' }}">
         {{ d.zfs.state }}
       </strong>
     </p>
     <p class="zfs-state" data-lang="cs">
-      Stav ZFS:
+      Stav:
       <strong class="{{ 'zfs-status-ok' if d.zfs.healthy else 'zfs-status-bad' }}">
         {{ d.zfs.state }}
       </strong>

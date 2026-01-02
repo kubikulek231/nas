@@ -95,12 +95,6 @@ body {
   font-size: 1.15rem;
 }
 
-.card p {
-  margin: 4px 0;
-  line-height: 1.5;
-  font-size: 0.95rem;
-}
-
 /* All real links */
 a[href] {
   color: var(--accent);
@@ -134,12 +128,6 @@ a[href]:focus-visible {
   text-decoration: none;
 }
 
-.note {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
 .footer {
   margin-top: 18px;
   padding-top: 8px;
@@ -169,7 +157,7 @@ a[href]:focus-visible {
 .endpoint-container {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
 }
 
 .mount-header{
@@ -178,12 +166,10 @@ a[href]:focus-visible {
 }
 
 .note {
-  margin: 0.8rem 0;
   padding: 0.6rem 0.9rem;
   border-left: 4px solid rgba(148, 163, 184, 0.8); /* gray-ish */
   background-color: rgba(15, 23, 42, 0.6);         /* subtle dark bg for your theme */
   color: var(--muted);
-  font-size: 0.9rem;
 }
 
 /* Language toggle buttons styling (adjust to taste) */
@@ -209,8 +195,24 @@ a[href]:focus-visible {
 }
 
 .language-container {
-    display: flex;
-    flex-direction: row-reverse;
-    width: 100%;
-    gap: 5px;
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  gap: 5px;
+}
+
+.endpoint-entry {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.endpoint-note {
+  color: var(--muted)
+}
+
+.user-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

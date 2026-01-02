@@ -1,19 +1,19 @@
 <section class="card">
-  <h2 data-lang="en">Storage Usage</h2>
-  <h2 data-lang="cs">Využití úložiště</h2>
+  <h2 data-lang="en">Storage Status</h2>
+  <h2 data-lang="cs">Stav uložiště</h2>
 
   <ul class="storage-list">
-  <p class="note" data-lang="en">
+  <div class="note" data-lang="en">
     The paths listed below are tied to local paths on the NAS and are not intended for mounting.
-  </p>
-  <p class="note" data-lang="cs">
+  </div>
+  <div class="note" data-lang="cs">
     Níže uvedené cesty odpovídají místním cestám na NAS a nejsou určeny k připojování (mountování).
-  </p>
+  </div>
     {# HUB #}
     {% set d = disks.hub %}
     <li class="storage-item">
       <div class="storage-header">
-        <span>Hub ({{ d.path }})</span>
+        <span>Hub (<code>{{ d.path }}</code>)</span>
         <span data-lang="en">
           {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
           ({{ "%.1f"|format(d.percent) }}% used)
@@ -32,7 +32,7 @@
     {% set d = disks.safetank %}
     <li class="storage-item zfs-storage-item">
       <div class="storage-header">
-        <span><b>ZFS Pool:</b> Safetank ({{ d.path }})</span>
+        <span><b>ZFS Pool:</b> safetank (<code>{{ d.path }}</code>)</span>
         <span data-lang="en">
           {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
           ({{ "%.1f"|format(d.percent) }}% used)
@@ -46,7 +46,7 @@
         <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
       </div>
       {% if d.note %}
-        <p class="note">{{ d.note }}</p>
+        <div class="note">{{ d.note }}</div>
       {% endif %}
 
       {% include "partials/zfs-status.html" %}
@@ -56,7 +56,7 @@
     {% set d = disks.fasttank %}
     <li class="storage-item zfs-storage-item">
       <div class="storage-header">
-        <span><b>ZFS Pool:</b> Fasttank ({{ d.path }})</span>
+        <span><b>ZFS Pool:</b> fasttank (<code>{{ d.path }}</code>)</span>
         <span data-lang="en">
           {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
           ({{ "%.1f"|format(d.percent) }}% used)
@@ -70,7 +70,7 @@
         <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
       </div>
       {% if d.note %}
-        <p class="note">{{ d.note }}</p>
+        <div class="note">{{ d.note }}</div>
       {% endif %}
 
       {% include "partials/zfs-status.html" %}

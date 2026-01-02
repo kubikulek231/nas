@@ -1,80 +1,87 @@
 <section class="card">
-  <h2 data-lang="en">Quick mount overview</h2>
+  <h2 data-lang="en">Quick Mount Overview</h2>
   <h2 data-lang="cs">Rychlý přehled připojení</h2>
 
-  <div data-lang="en">
-    <a>NAS primarily uses the <b>SMB</b> protocol for mounting drives at the following endpoints.</a>
-  </div>
-  <div data-lang="cs">
-    <a>NAS primárně používá protokol <b>SMB</b> pro připojení jednotek na následujících adresách.</a>
+  <div class="card-text">
+    <div data-lang="en">
+      <a>NAS primarily uses the <b>SMB</b> protocol for mounting drives at the following endpoints.</a>
+    </div>
+    <div data-lang="cs">
+      <a>NAS primárně používá protokol <b>SMB</b> pro připojení jednotek na následujících adresách.</a>
+    </div>
   </div>
 
   <div class="endpoint-container smb-endpoint-container">
-    <div data-lang="en">
+
+    <div class="endpoint-entry">
       <span class="endpoint">\\{{ server_name }}\data</span>
-      <div>Data hub with all storage paths and drives</div>
-    </div>
-    <div data-lang="cs">
-      <span class="endpoint">\\{{ server_name }}\data</span>
-      <div>Datový rozcestník se všemi cestami a disky</div>
+      <div data-lang="en">
+        <div class="endpoint-note">data hub with all storage paths and drives,</div>
+      </div>
+      <div data-lang="cs">
+        <div class="endpoint-note">datový rozcestník se všemi cestami a disky,</div>
+      </div>
     </div>
 
-    <div data-lang="en">
+    <div class="endpoint-entry">
       <span class="endpoint">\\{{ server_name }}\data\safe</span>
-      <div>Safe mirrored storage (1:1 mirrored HDDs)</div>
-    </div>
-    <div data-lang="cs">
-      <span class="endpoint">\\{{ server_name }}\data\safe</span>
-      <div>Bezpečné zrcadlené úložiště (1:1 HDD)</div>
-    </div>
-
-    <div data-lang="en">
-      <span class="endpoint">\\{{ server_name }}\data\fast</span>
-      <div>Fast NVMe storage, no parity</div>
-    </div>
-    <div data-lang="cs">
-      <span class="endpoint">\\{{ server_name }}\data\fast</span>
-      <div>Rychlé NVMe uložiště, bez jakékoliv ochrany</div>
+      <div data-lang="en">
+        <div class="endpoint-note">safe mirrored storage (1:1 mirrored HDDs),</div>
+      </div>
+      <div data-lang="cs">
+        <div class="endpoint-note">bezpečné zrcadlené úložiště (1:1 HDD),</div>
+      </div>
     </div>
 
-    <div data-lang="en">
-      <span class="endpoint">\\{{ server_name }}\data\guest</span>
-      <div>Guest area (write allowed for guests):</div>
+    <div class="endpoint-entry">
+      <span class="endpoint">\\{{ server_name }}\data\fast</span>
+      <div data-lang="en">
+        <div class="endpoint-note">fast NVMe storage, no parity,</div>
+      </div>
+      <div data-lang="cs">
+        <div class="endpoint-note">rychlé NVMe uložiště, bez jakékoliv ochrany,</div>
+      </div>
     </div>
-    <div data-lang="cs">
+
+    <div class="endpoint-entry">
       <span class="endpoint">\\{{ server_name }}\data\guest</span>
-      <div>Zóna pro hosty, (mají zde práva zápisu)</div>
+      <div data-lang="en">
+        <div class="endpoint-note">guest area (write allowed for guests).</div>
+      </div>
+      <div data-lang="cs">
+        <div class="endpoint-note">zóna pro hosty, (mají zde práva zápisu).</div>
+      </div>
     </div>
   </div>
 
-  <div class="endpoint-container">
-    <p data-lang="en">
-      How to connect from Windows:
-      <a href="#mount-guides">go to mount guides</a>.
-    </p>
-    <p data-lang="cs">
-      Jak se připojit z Windows:
-      <a href="#mount-guides">jít na návody pro připojení</a>.
-    </p>
+  <div class="note">
+    <div data-lang="en">
+      How to connect from Windows: <a href="#mount-guides">go to mount guides</a>.
+    </div>
+    <div data-lang="cs">
+      Jak se připojit z Windows: <a href="#mount-guides">přejít na návody pro připojení</a>.
+    </div>
   </div>
 
-  <div class="endpoint-container user-container">
-    <p data-lang="en">
-      Guest access (read everywhere, write only in <code>\data\guest</code>):<br />
-      user: <code>nasguest</code><br />
-      password: <code>nasguest</code>
-    </p>
-    <p data-lang="cs">
-      Guest přístup (čtení všude, zápis jen v <code>\data\guest</code>):<br />
-      uživatel: <code>nasguest</code><br />
-      heslo: <code>nasguest</code>
-    </p>
+  <div class="user-container">
+    <div class="card-text user-container-details" data-lang="en">
+      <div>Guest access (read everywhere, write only in <code>\data\guest</code>):</div>
+      <div>&bull; user: <code>nasguest</code></div>
+      <div>&bull; password: <code>nasguest</code></div>
+    </div>
+    <div class="card-text user-container-details" data-lang="cs">
+      <div> Guest přístup (čtení všude, zápis jen v <code>\data\guest</code>):</div>
+      <div>&bull; uživatel: <code>nasguest</code></div>
+      <div>&bull; heslo: <code>nasguest</code></div>
+    </div>
 
-    <p data-lang="en">
-      User <code>nasuser</code> has extended access; for the password, contact the administrator.
-    </p>
-    <p data-lang="cs">
-      Uživatel <code>nasuser</code> má rozšířený přístup; pro heslo kontaktujte administrátora.
-    </p>
+    <div class="card-text">
+      <div data-lang="en">
+        User <code>nasuser</code> has extended access; for the password, contact the administrator.
+      </div>
+      <div data-lang="cs">
+        Uživatel <code>nasuser</code> má rozšířený přístup; pro heslo kontaktujte administrátora.
+      </div>
+    </div>
   </div>
 </section>
