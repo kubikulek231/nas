@@ -2,13 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
   console.log('[lang] language.js loaded, DOM ready');
 
   (function () {
-    var currentLang = 'cs';
+    var currentLang = 'cs'; // preferred default
 
     function setLanguage(lang) {
       currentLang = lang;
       console.log('[lang] setLanguage:', lang);
 
-      // Set <html lang="...">
+      // <html lang="...">
       document.documentElement.setAttribute('lang', lang);
 
       // Show/hide content
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
       });
 
-      // Update buttons (but never hide them)
+      // Update buttons (never hide them)
       document.querySelectorAll('.lang-btn').forEach(function (btn) {
         var isActive = btn.getAttribute('data-lang-btn') === lang;
         btn.classList.toggle('is-active', isActive);
@@ -41,10 +41,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var saved = window.localStorage && localStorage.getItem('nasLang');
     console.log('[lang] initial value from localStorage:', saved);
+
+    // If saved, use it; otherwise use currentLang ('cs')
     if (saved === 'en' || saved === 'cs') {
       setLanguage(saved);
     } else {
-      setLanguage('en');
+      setLanguage(currentLang); // << this is the important change
     }
   })();
 });
