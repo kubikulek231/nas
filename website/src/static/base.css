@@ -207,3 +207,10 @@ a[href]:focus-visible {
   background: var(--accent-soft);
   color: var(--accent);
 }
+
+.language-container {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;
+    gap: 5px;
+}
