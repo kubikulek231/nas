@@ -49,14 +49,14 @@
 
 /* Hover / active */
 .button-primary:hover {
-  background-color: rgb(29, 61, 41);
-  box-shadow: 0 3px 6px rgb(30, 61, 41);
+  background-color: rgba(13, 136, 58, 0.35);
+  box-shadow: 3px 3px 3px  rgba(28, 63, 41, 0.336);
   transform: translateY(-1px);
 }
 
 .button-primary:active {
-  background-color: #1b3524;
-  box-shadow: 0 3px 6px rgba(17, 134, 60, 0.35);
+  background-color: rgb(28, 63, 41);
+  box-shadow: 3px 3px 3px rgba(28, 63, 41, 0.336);
   transform: translateY(0);
 }
 
