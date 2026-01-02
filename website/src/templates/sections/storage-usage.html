@@ -3,27 +3,85 @@
   <h2 data-lang="cs">Využití úložiště</h2>
 
   <ul class="storage-list">
-    {% for name, d in disks.items() %}
-      <li class="storage-item">
-        <div class="storage-header">
-          <span>{{ name|capitalize }} ({{ d.path }})</span>
-          <span data-lang="en">
-            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
-            ({{ "%.1f"|format(d.percent) }}% used)
-          </span>
-          <span data-lang="cs">
-            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
-            (využito {{ "%.1f"|format(d.percent) }} %)
-          </span>
-        </div>
 
-        <div class="storage-bar">
-          <div
-            class="storage-bar-fill"
-            style="width: {{ d.percent }}%;"
-          ></div>
-        </div>
-      </li>
-    {% endfor %}
+    {# HUB #}
+    {% set d = disks.hub %}
+    <li class="storage-item">
+      <div class="storage-header">
+        <span>Hub ({{ d.path }})</span>
+        <span data-lang="en">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          ({{ "%.1f"|format(d.percent) }}% used)
+        </span>
+        <span data-lang="cs">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          (využito {{ "%.1f"|format(d.percent) }} %)
+        </span>
+      </div>
+      <div class="storage-bar">
+        <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
+      </div>
+      <p class="note">{{ d.note }}</p>
+    </li>
+
+    {# SAFETANK WITH ZFS STATUS #}
+    {% set d = disks.safetank %}
+    <li class="storage-item">
+      <div class="storage-header">
+        <span>Safetank ({{ d.path }})</span>
+        <span data-lang="en">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          ({{ "%.1f"|format(d.percent) }}% used)
+        </span>
+        <span data-lang="cs">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          (využito {{ "%.1f"|format(d.percent) }} %)
+        </span>
+      </div>
+      <div class="storage-bar">
+        <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
+      </div>
+      <p class="note">{{ d.note }}</p>
+
+      {% if d.zfs %}
+        <p class="note" data-lang="en">
+          ZFS state: <strong>{{ d.zfs.state }}</strong>
+        </p>
+        <p class="note" data-lang="cs">
+          Stav ZFS: <strong>{{ d.zfs.state }}</strong>
+        </p>
+        {# Optionally loop devices from d.zfs.config here #}
+      {% endif %}
+    </li>
+
+    {# FASTTANK WITH ZFS STATUS #}
+    {% set d = disks.fasttank %}
+    <li class="storage-item">
+      <div class="storage-header">
+        <span>Fasttank ({{ d.path }})</span>
+        <span data-lang="en">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          ({{ "%.1f"|format(d.percent) }}% used)
+        </span>
+        <span data-lang="cs">
+          {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+          (využito {{ "%.1f"|format(d.percent) }} %)
+        </span>
+      </div>
+      <div class="storage-bar">
+        <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
+      </div>
+      <p class="note">{{ d.note }}</p>
+
+      {% if d.zfs %}
+        <p class="note" data-lang="en">
+          ZFS state: <strong>{{ d.zfs.state }}</strong>
+        </p>
+        <p class="note" data-lang="cs">
+          Stav ZFS: <strong>{{ d.zfs.state }}</strong>
+        </p>
+      {% endif %}
+    </li>
+
   </ul>
 </section>
