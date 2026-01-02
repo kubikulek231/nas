@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
+  console.log('[lang] language.js loaded, DOM ready');
+
   (function () {
     var currentLang = 'en';
 
     function setLanguage(lang) {
       currentLang = lang;
+      console.log('[lang] setLanguage:', lang);
+
       document.documentElement.setAttribute('lang', lang);
 
       document.querySelectorAll('[data-lang]').forEach(function (el) {
@@ -22,15 +26,18 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!btn) return;
       var lang = btn.getAttribute('data-lang');
       if (!lang) return;
+      console.log('[lang] button clicked:', lang);
       setLanguage(lang);
       if (window.localStorage) {
         localStorage.setItem('nasLang', lang);
+        console.log('[lang] saved to localStorage:', lang);
       }
     }
 
     document.addEventListener('click', handleLangClick);
 
     var saved = window.localStorage && localStorage.getItem('nasLang');
+    console.log('[lang] initial value from localStorage:', saved);
     if (saved === 'en' || saved === 'cs') {
       setLanguage(saved);
     } else {
