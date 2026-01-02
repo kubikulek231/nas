@@ -1,0 +1,29 @@
+<section class="card">
+  <h2 data-lang="en">Storage Usage</h2>
+  <h2 data-lang="cs">Využití úložiště</h2>
+
+  <ul class="storage-list">
+    {% for name, d in disks.items() %}
+      <li class="storage-item">
+        <div class="storage-header">
+          <span>{{ name|capitalize }} ({{ d.path }})</span>
+          <span data-lang="en">
+            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+            ({{ "%.1f"|format(d.percent) }}% used)
+          </span>
+          <span data-lang="cs">
+            {{ "%.1f"|format(d.used_gib) }} / {{ "%.1f"|format(d.total_gib) }} GiB
+            (využito {{ "%.1f"|format(d.percent) }} %)
+          </span>
+        </div>
+
+        <div class="storage-bar">
+          <div
+            class="storage-bar-fill"
+            style="width: {{ d.percent }}%;"
+          ></div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

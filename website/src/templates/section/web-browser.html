@@ -1,0 +1,33 @@
+<section class="card">
+  <h2 data-lang="en">Web File Browser</h2>
+  <h2 data-lang="cs">Webový prohlížeč souborů</h2>
+
+  <p class="note" data-lang="en">
+    Use the built-in <b>FileBrowser Quantum</b> from any browser or device.
+  </p>
+  <p class="note" data-lang="cs">
+    Použijte vestavěný <b>FileBrowser Quantum</b> z libovolného prohlížeče nebo zařízení.
+  </p>
+
+  <div class="button button-primary"
+       role="button"
+       tabindex="0"
+       onclick="window.open('{{ base_url }}:8080', '_blank', 'noopener');">
+    <div class="button-image"></div>
+    <div class="button-text" data-lang="en">Browse Now</div>
+    <div class="button-text" data-lang="cs">Otevřít prohlížeč</div>
+  </div>
+
+  <p data-lang="en">
+    Web UI endpoint:
+    <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
+      {{ base_url }}:8080
+    </a>
+  </p>
+  <p data-lang="cs">
+    Adresa webového rozhraní:
+    <a class="endpoint" href="{{ base_url }}:8080" target="_blank" rel="noopener">
+      {{ base_url }}:8080
+    </a>
+  </p>
+</section>
