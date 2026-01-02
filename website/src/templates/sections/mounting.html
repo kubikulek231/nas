@@ -2,45 +2,63 @@
   <h2 data-lang="en">Quick mount overview</h2>
   <h2 data-lang="cs">Rychlý přehled připojení</h2>
 
-  <div class="endpoint-container mount-container">
-    <p data-lang="en">
-      Data hub (all storage paths):<br />
+  <div data-lang="en">
+    <a>NAS primarily uses the <b>SMB</b> protocol for mounting drives at the following endpoints.</a>
+  </div>
+  <div data-lang="cs">
+    <a>NAS primárně používá protokol <b>SMB</b> pro připojení jednotek na následujících adresách.</a>
+  </div>
+
+  <div class="endpoint-container smb-endpoint-container">
+    <div data-lang="en">
       <span class="endpoint">\\{{ server_name }}\data</span>
-    </p>
-    <p data-lang="cs">
-      Datové centrum (všechny cesty):<br />
+      <div>Data hub with all storage paths and drives</div>
+    </div>
+    <div data-lang="cs">
       <span class="endpoint">\\{{ server_name }}\data</span>
-    </p>
+      <div>Datový rozcestník se všemi cestami a disky</div>
+    </div>
 
-    <p data-lang="en">
-      Safe mirrored storage (1:1 mirrored HDDs):<br />
+    <div data-lang="en">
       <span class="endpoint">\\{{ server_name }}\data\safe</span>
-    </p>
-    <p data-lang="cs">
-      Bezpečné zrcadlené úložiště (1:1 HDD):<br />
+      <div>Safe mirrored storage (1:1 mirrored HDDs)</div>
+    </div>
+    <div data-lang="cs">
       <span class="endpoint">\\{{ server_name }}\data\safe</span>
-    </p>
+      <div>Bezpečné zrcadlené úložiště (1:1 HDD)</div>
+    </div>
 
-    <p data-lang="en">
-      Fast storage (NVMe, not safe):<br />
+    <div data-lang="en">
       <span class="endpoint">\\{{ server_name }}\data\fast</span>
-    </p>
-    <p data-lang="cs">
-      Rychlé úložiště (NVMe, bez ochrany):<br />
+      <div>Fast NVMe storage, no parity</div>
+    </div>
+    <div data-lang="cs">
       <span class="endpoint">\\{{ server_name }}\data\fast</span>
-    </p>
+      <div>Rychlé NVMe uložiště, bez jakékoliv ochrany</div>
+    </div>
 
-    <p data-lang="en">
-      Guest area (write allowed for guests):<br />
+    <div data-lang="en">
       <span class="endpoint">\\{{ server_name }}\data\guest</span>
-    </p>
-    <p data-lang="cs">
-      Guest zóna (hosté mohou zapisovat):<br />
+      <div>Guest area (write allowed for guests):</div>
+    </div>
+    <div data-lang="cs">
       <span class="endpoint">\\{{ server_name }}\data\guest</span>
-    </p>
+      <div>Zóna pro hosty, (mají zde práva zápisu)</div>
+    </div>
   </div>
 
   <div class="endpoint-container">
+    <p data-lang="en">
+      How to connect from Windows:
+      <a href="#mount-guides">go to mount guides</a>.
+    </p>
+    <p data-lang="cs">
+      Jak se připojit z Windows:
+      <a href="#mount-guides">jít na návody pro připojení</a>.
+    </p>
+  </div>
+
+  <div class="endpoint-container user-container">
     <p data-lang="en">
       Guest access (read everywhere, write only in <code>\data\guest</code>):<br />
       user: <code>nasguest</code><br />
@@ -59,37 +77,4 @@
       Uživatel <code>nasuser</code> má rozšířený přístup; pro heslo kontaktujte administrátora.
     </p>
   </div>
-
-  <div class="endpoint-container">
-    <p data-lang="en">
-      How to connect from Windows:
-      <a href="https://it.cornell.edu/shared-file/connect-windows-file-share-unc-path" target="_blank" rel="noopener">
-        Guide: connect to SMB share on Windows
-      </a>
-    </p>
-    <p data-lang="cs">
-      Jak se připojit z Windows:
-      <a href="https://it.cornell.edu/shared-file/connect-windows-file-share-unc-path" target="_blank" rel="noopener">
-        Návod: připojení SMB sdílení ve Windows
-      </a>
-    </p>
-  </div>
-
-  <p class="note" data-lang="en">
-    NFS access is also enabled, but is experimental and intended only for advanced users.
-    Character encoding and filename handling may be incorrect when using NFS.
-    For NFS mounting instructions on Windows, see for example
-    <a href="https://netwrix.com/en/resources/blog/mounting-nfs-client-windows/" target="_blank" rel="noopener">
-      this NFS client guide for Windows
-    </a>.
-  </p>
-  <p class="note" data-lang="cs">
-    NFS přístup je také povolen, ale je experimentální a určený pouze pro pokročilé uživatele.
-    Při použití NFS může docházet k chybné znakové sadě a problémům s názvy souborů.
-    Návod na připojení NFS ve Windows najdete například v
-    <a href="https://netwrix.com/en/resources/blog/mounting-nfs-client-windows/" target="_blank" rel="noopener">
-      tomto článku o NFS klientu pro Windows
-    </a>.
-  </p>
-
 </section>
