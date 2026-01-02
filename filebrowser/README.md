@@ -53,11 +53,14 @@ Any user within the network can access any files from any device 📱💻 easill
    sudo usermod -aG sudo filebrowser
    ```
 
-4. Chown config
+4. Configure
    ```bash
    sudo chown filebrowser:filebrowser /opt/filebrowser/config.yaml
    sudo chown filebrowser:filebrowser /opt/filebrowser/
    sudo chown filebrowser:filebrowser /opt/filebrowser/filebrowser
+
+   # Set up admin password
+   FILEBROWSER_ADMIN_PASSWORD="mysecurePassword"
    ```
 
 3. Create systemd service. A file for running the filebrowser as service needs to be created. One can use nano:

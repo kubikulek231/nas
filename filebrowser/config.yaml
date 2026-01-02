@@ -68,4 +68,3 @@ userDefaults:
   debugOffice: false                      # debug onlyoffice editor
 auth:
   adminUsername: admin
-  adminPassword: admin
