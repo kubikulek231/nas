@@ -101,19 +101,21 @@ body {
   font-size: 0.95rem;
 }
 
-/* Links: slightly darker, subtle accent on hover */
-a {
-  color: #9ca3af;
+/* All real links */
+a[href] {
+  color: var(--accent);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+a[href]:hover,
+a[href]:focus-visible {
+  color: var(--accent);
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-/* “Chip” values like IP/DNS/base URL */
-.endpoint {
+/* Chip-style links (override the global rule) */
+a[href].endpoint {
   display: inline-flex;
   align-items: center;
   padding: 2px 7px;
@@ -124,6 +126,12 @@ a:hover {
   font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
   font-size: 0.86rem;
   letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+a[href].endpoint:hover,
+a[href].endpoint:focus-visible {
+  text-decoration: none;
 }
 
 .note {
@@ -168,3 +176,4 @@ a:hover {
     padding-top: 20px;
     margin-bottom: 0px;
 }
+
