@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   console.log('[lang] language.js loaded, DOM ready');
 
   (function () {
-    var currentLang = 'en';
+    var currentLang = 'cs';
 
     function setLanguage(lang) {
       currentLang = lang;
