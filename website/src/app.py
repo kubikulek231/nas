@@ -9,19 +9,56 @@ app = Flask(__name__)
 SERVER_IP = os.environ["SERVER_IP"]
 SERVER_NAME = os.environ["SERVER_NAME"]
 BASE_URL = os.environ.get("BASE_URL", f"http://{SERVER_IP}")
-
+MOCK_ZFS = True
 
 def summarize_pool(pool_name):
+    if MOCK_ZFS:
+        # simple deterministic mock, you can customize per pool_name
+        if pool_name == "safetank":
+            return {
+                "state": "DEGRADED",
+                "status": "One or more devices has experienced an error.",
+                "action": "Replace the faulted device and run a scrub.",
+                "scrub": "scrub repaired 0B in 0 days 00:10:23 with 0 errors on Sun Jan  2 22:00:00 2026",
+                "healthy": False,
+                "bad_devices": [
+                    {
+                        "name": "sda",
+                        "state": "DEGRADED",
+                        "read": 0,
+                        "write": 0,
+                        "cksum": 12,
+                    }
+                ],
+            }
+        elif pool_name == "fasttank":
+            return {
+                "state": "ONLINE",
+                "status": "The pool is formatted using a legacy on-disk format.",
+                "action": "Upgrade the pool using 'zpool upgrade'.",
+                "scrub": "scrub repaired 0B in 0 days 00:05:02 with 0 errors on Sun Jan  2 21:00:00 2026",
+                "healthy": True,
+                "bad_devices": [],
+            }
+        else:
+            return {
+                "state": "ONLINE",
+                "status": "All datasets are healthy.",
+                "action": None,
+                "scrub": None,
+                "healthy": True,
+                "bad_devices": [],
+            }
+
+    # real call
     z = ZPool(pool_name, options=["-v"])
     s = z.get_status()
 
-    # Basic fields
     state = s.get("state")
     status_text = s.get("status")
     action = s.get("action")
     scrub = s.get("scrub")
 
-    # Walk config to find bad devices
     bad_devices = []
 
     def walk(devs):
@@ -35,7 +72,6 @@ def summarize_pool(pool_name):
                     "write": d.get("write"),
                     "cksum": d.get("cksum"),
                 })
-            # Recurse into children
             if "devices" in d:
                 walk(d["devices"])
 

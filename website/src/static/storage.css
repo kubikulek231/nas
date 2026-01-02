@@ -29,3 +29,38 @@
   width: 0;
   transition: width 0.3s ease;
 }
+
+.zfs-status-block {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.zfs-state {
+  margin: 0;
+}
+
+.zfs-status-ok {
+  color: #2e7d32; /* green */
+}
+
+.zfs-status-bad {
+  color: #c62828; /* red */
+}
+
+.zfs-info {
+  color: #607d8b;
+}
+
+.zfs-warning {
+  color: #e65100;
+}
+
+.zfs-devices.zfs-error-list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.zfs-device-bad {
+  color: #c62828;
+}
+

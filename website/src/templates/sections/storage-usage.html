@@ -41,8 +41,10 @@
       <div class="storage-bar">
         <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
       </div>
-      <p class="note">{{ d.note }}</p>
-
+      {% if d.note %}
+        <p class="note">{{ d.note }}</p>
+      {% endif %}
+      
       {% include "partials/zfs-status.html" %}
     </li>
 
@@ -63,7 +65,9 @@
       <div class="storage-bar">
         <div class="storage-bar-fill" style="width: {{ d.percent }}%;"></div>
       </div>
-      <p class="note">{{ d.note }}</p>
+      {% if d.note %}
+        <p class="note">{{ d.note }}</p>
+      {% endif %}
 
       {% include "partials/zfs-status.html" %}
     </li>
