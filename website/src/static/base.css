@@ -143,17 +143,6 @@ a[href]:focus-visible {
   color: rgba(148, 163, 184, 0.7);
 }
 
-@media (max-width: 640px) {
-  .page {
-    margin: 14px;
-    padding: 18px 15px 16px;
-  }
-
-  .header h1 {
-    font-size: 1.5rem;
-  }
-}
-
 .endpoint-container {
     display: flex;
     flex-direction: column;
@@ -215,4 +204,23 @@ a[href]:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+/* Mobile views */
+
+@media (max-width: 640px) {
+  .page {
+    margin: 14px;
+    padding: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
 }
