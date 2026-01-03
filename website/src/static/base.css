@@ -121,6 +121,8 @@ a[href]:focus-visible {
   font-size: 0.86rem;
   letter-spacing: 0.02em;
   text-decoration: none;
+  min-width: fit-content;
+  white-space: nowrap;   /* <- key part */
 }
 
 .endpoint:hover,
@@ -208,7 +210,7 @@ a[href]:focus-visible {
 
 /* Mobile views */
 
-@media (max-width: 640px) {
+@media (max-width: 1000px) {
   .page {
     margin: 14px;
     padding: 0;
