@@ -80,7 +80,7 @@ body {
 .card {
   display: flex;
   flex-direction: column;
-  min-width: 400px;
+  min-width: 300px;
   gap: 10px;
   background:
     radial-gradient(circle at top left, rgba(34, 197, 94, 0.07), transparent 55%),
@@ -124,6 +124,8 @@ a[href]:focus-visible {
   text-decoration: none;
   min-width: fit-content;
   white-space: nowrap;   /* <- key part */
+  height: fit-content;
+  width: fit-content;
 }
 
 .endpoint:hover,
@@ -217,6 +219,7 @@ a[href]:focus-visible {
     padding: 14px 14px 14px;
     max-width: none;
     width: 100%;
+    min-width: 360px;
   }
 
   .header h1 {
@@ -225,5 +228,13 @@ a[href]:focus-visible {
 
   .header h2 {
     font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .endpoint-entry {
+    flex-direction: column;
+    gap: 10px;
   }
 }
