@@ -6,9 +6,19 @@ This document shows how to create and tune two ZFS pools used on this NAS:
 - Safe (mirrored) pool: safetank with dataset /safetank/data
 - Fast (NVMe) pool: fasttank with dataset /fasttank/data
 
+1. Find stable disk IDs — Run this once to see the persistent names for your disks:
+```bash
+ls -l /dev/disk/by-id
+```
+
 1. Create mirrored safe pool ("safetank") — replace devices with your actual block devices:
 ```bash
-sudo zpool create safetank mirror /dev/sda /dev/sdc
+# Example – adjust to your IDs
+sudo zpool create safetank \
+  mirror \
+  /dev/disk/by-id/ata-WDC_WD40EFRX-68WT0N0_WD-WCC4E1234567 \
+  /dev/disk/by-id/ata-WDC_WD40EFRX-68WT0N0_WD-WCC4E1234568
+
 sudo zfs create safetank/data
 ```
 
