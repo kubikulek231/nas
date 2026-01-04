@@ -76,3 +76,67 @@ sudo sanoid --debug --take-snapshots
 sudo sanoid --debug --prune-snapshots
 zfs list -t snapshot
 ```
+
+7. Set HDD power management
+
+```bash
+# Again list the disks by ID, use the ids to set the values for testing
+sudo hdparm -B 254 -S 240 \
+  /dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRJM \
+  /dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRTB
+# -B 254 sets APM mode to 254
+# -S 240 is time before spindown (20 minutes)
+
+# To make this persistent, edit /etc/hdparm.conf with:
+/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRJM {
+    apm = 254
+    spindown_time = 240
+}
+
+/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRTB {
+    apm = 254
+    spindown_time = 240
+}
+```
+
+8. Enable power saving
+```bash
+# Install powertop
+sudo apt install powertop
+
+# To make this persistent, create systemd service /etc/systemd/system/powertop.service with:
+[Unit]
+Description=Powertop tunings
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/powertop --auto-tune
+
+[Install]
+WantedBy=multi-user.target
+
+# Start it using
+sudo systemctl daemon-reload
+sudo systemctl enable --now powertop.service
+```
+
+9. Save CPU power by clocking down
+```bash
+# Create a slim systemd service:
+sudo nano /etc/systemd/system/cpupower-governor.service
+
+# Put:
+[Unit]
+Description=Set CPU governor to powersave
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/cpupower frequency-set -g powersave
+
+[Install]
+WantedBy=multi-user.target
+
+# Enable
+sudo systemctl daemon-reload
+sudo systemctl enable --now cpupower-governor.service
+```

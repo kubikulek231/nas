@@ -29,5 +29,6 @@ Currently running Ubuntu 24.04.3 LTS (Server).
 2) Flash a flashdrive using https://rufus.ie/.
 
 3) Make sure motherboards BIOS is up to date, update if needed and enable in band ECC (very nice feature by Hardkernel - creators of the H4 board).
-4) Flash the Ubuntu on the NVME, make sure it is bootable. Add user "nas".
-5) Continue ZFS - Filesystem in [Index](#index).
+4) Set ACPI to AUTO in BIOS.
+5) Flash the Ubuntu on the NVME, make sure it is bootable. Add user "nas".
+6) Continue ZFS - Filesystem in [Index](#index).
