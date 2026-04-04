@@ -14,7 +14,7 @@ RestartSec=5
 Environment="SERVER_IP=192.168.1.230"
 Environment="SERVER_NAME=nas.local"
 Environment="BASE_URL=http://192.168.1.230"
-Environment="DRIVE_STATUS_DATA_DIR=/home/nas/nas/data/drive-status"
+Environment="DRIVE_STATUS_DATA_DIR=/home/nas/data/drive-status"
 
 [Install]
 WantedBy=multi-user.target

@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 
-DEFAULT_DATA_DIR = "/home/nas/nas/data/drive-status"
+DEFAULT_DATA_DIR = "/home/nas/data/drive-status"
 DEFAULT_RETENTION_DAYS = 60
 POOL_KEY = "safetank_mirror"
 POOL_LABEL = "SafeTank mirror"
