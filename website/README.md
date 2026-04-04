@@ -27,12 +27,14 @@ Go back to [Index](./../README.md)
     pip install zpool-status
     ```
 
-2. Copy app.py, index.html and style.css from this repository directory to `/srv/website` and:
+2. Copy the contents of `src/` from this repository directory to `/srv/website` and create a persistent history directory at `/home/nas/nas/data/drive-status`:
 
     ```bash
     # Set permissions
     sudo chown -R nas:nas /srv/website
     sudo chmod -R u+rwX,go+rX /srv/website
+    sudo mkdir -p /home/nas/nas/data/drive-status
+    sudo chown -R nas:nas /home/nas/nas/data/drive-status
     ```
 
     Now the `python3 app.py` can be run and the website can be developed.
@@ -50,11 +52,16 @@ Go back to [Index](./../README.md)
     ```
     And pasting contents of `nashub-website.service` next to this readme file in.
 
-4. Starting the systemd service:
+4. Starting the systemd service and timer:
     ```bash
     sudo systemctl daemon-reload
     sudo systemctl enable nashub-website.service
+    sudo systemctl enable nashub-monitor-drives.timer
     sudo systemctl start nashub-website.service
+    sudo systemctl start nashub-monitor-drives.timer
     sudo systemctl status nashub-website.service
+    sudo systemctl status nashub-monitor-drives.timer
     ```
-    Or if this whole repository is cloned via git, just run the do `chmod +x ./deploy` and run ./deploy from inside the website dir.
+    The drive history collector now runs through a systemd timer every 5 minutes, which keeps logs in journalctl and avoids managing a root crontab entry manually.
+
+    Or if this whole repository is cloned via git, run `chmod +x ./deploy.sh` and then `./deploy.sh` from inside the website directory.

@@ -1,7 +1,6 @@
 import os
-import datetime
-import json
 from flask import Flask, render_template, jsonify
+from drive_history import POOL_KEY, POOL_LABEL, load_recent_history
 from status import summarize_pool, disk_usage_gib
 
 app = Flask(__name__)
@@ -43,12 +42,19 @@ def home():
 
 @app.route("/api/drive-status")
 def drive_status():
-    current_time = datetime.datetime.now()
-    month_file = current_time.strftime("%Y-%m.json")
-    data_file = os.path.join(os.path.dirname(__file__), month_file)
-    if os.path.exists(data_file):
-        with open(data_file, 'r') as f:
-            data = json.load(f)
-    else:
-        data = []
-    return jsonify(data)
+    history = load_recent_history()
+    series = [
+        {
+            "id": POOL_KEY,
+            "label": POOL_LABEL,
+            "points": [
+                {
+                    "timestamp": entry["timestamp"],
+                    "state": entry.get(POOL_KEY),
+                }
+                for entry in history
+                if entry.get(POOL_KEY) in (0, 1)
+            ],
+        }
+    ]
+    return jsonify({"series": series})

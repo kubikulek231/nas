@@ -1,0 +1,12 @@
+[Unit]
+Description=Collect NAS drive standby history
+After=local-fs.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/srv/website
+Environment="DRIVE_STATUS_DATA_DIR=/home/nas/nas/data/drive-status"
+ExecStart=/usr/bin/python3 /srv/website/monitor_drives.py
+Nice=10
+IOSchedulingClass=idle

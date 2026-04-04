@@ -21,7 +21,7 @@
 .storage-bar {
   width: 100%;
   height: 0.6rem;
-  background-color: #e0e0e0;
+  background-color: color-mix(in srgb, var(--bg-elevated) 70%, var(--border));
   border-radius: 999px;
   overflow: hidden;
 }
@@ -51,7 +51,7 @@
 }
 
 .zfs-info {
-  color: #607d8b;
+  color: var(--muted);
 }
 
 .zfs-warning {
@@ -71,4 +71,47 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.chart-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.chart-range-btn {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.chart-range-btn:hover,
+.chart-range-btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.chart-range-btn.is-active {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--accent);
+}
+
+.drive-chart-shell {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--bg-elevated) 94%, transparent);
+  padding: 0.5rem 0.65rem 0.35rem;
+}
+
+.drive-chart-empty {
+  display: none;
+  margin-top: 1rem;
+  color: var(--muted);
 }

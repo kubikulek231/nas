@@ -1,11 +1,15 @@
-import subprocess
-import json
-import os
 import datetime
+import shutil
+import subprocess
+
+from drive_history import append_entry, prune_old_files
+
+
+HDPARM_BIN = shutil.which("hdparm") or "/usr/sbin/hdparm"
 
 def get_drive_state(device):
     try:
-        result = subprocess.run(['sudo', 'hdparm', '-C', device], capture_output=True, text=True, check=True)
+        result = subprocess.run([HDPARM_BIN, "-C", device], capture_output=True, text=True, check=True)
         output = result.stdout
         if 'standby' in output:
             return 0
@@ -13,46 +17,25 @@ def get_drive_state(device):
             return 1
         else:
             return None
-    except subprocess.CalledProcessError:
+    except (FileNotFoundError, subprocess.CalledProcessError):
         return None
 
 def main():
     current_time = datetime.datetime.now()
-    month_file = current_time.strftime("%Y-%m.json")
-    data_dir = os.path.dirname(__file__)
-    data_file = os.path.join(data_dir, month_file)
-
-    # Load existing data
-    if os.path.exists(data_file):
-        with open(data_file, 'r') as f:
-            data = json.load(f)
-    else:
-        data = []
-
-    # Append new entry
+    drive_states = [
+        get_drive_state('/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRJM'),
+        get_drive_state('/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRTB'),
+    ]
     entry = {
         "timestamp": current_time.isoformat(),
-        "sda": get_drive_state('/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRJM'),
-        "sdb": get_drive_state('/dev/disk/by-id/ata-ST4000DM005-2DP166_ZGY1BRTB')
+        "safetank_mirror": max(
+            (value for value in drive_states if value in (0, 1)),
+            default=None,
+        ),
     }
-    data.append(entry)
 
-    # Save data
-    with open(data_file, 'w') as f:
-        json.dump(data, f, indent=2)
-
-    # Clean old files (older than 2 months)
-    now = datetime.datetime.now()
-    two_months_ago = now - datetime.timedelta(days=60)
-    for file in os.listdir(data_dir):
-        if file.endswith('.json') and file != month_file:
-            try:
-                year, month = map(int, file[:-5].split('-'))
-                file_date = datetime.datetime(year, month, 1)
-                if file_date < two_months_ago:
-                    os.remove(os.path.join(data_dir, file))
-            except ValueError:
-                pass
+    append_entry(entry, now=current_time)
+    prune_old_files(now=current_time)
 
 if __name__ == "__main__":
     main()

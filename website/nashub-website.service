@@ -6,14 +6,15 @@ After=network.target
 User=root
 WorkingDirectory=/srv/website
 
-# Point to gunicorn inside the venv
-ExecStart=/home/nas/.venv/bin/gunicorn -w 2 -b 0.0.0.0:80 app:app
+ExecStart=/home/nas/.venv/bin/gunicorn -w 1 -b 0.0.0.0:80 app:app
 
 Restart=on-failure
+RestartSec=5
 
 Environment="SERVER_IP=192.168.1.230"
 Environment="SERVER_NAME=nas.local"
 Environment="BASE_URL=http://192.168.1.230"
+Environment="DRIVE_STATUS_DATA_DIR=/home/nas/nas/data/drive-status"
 
 [Install]
 WantedBy=multi-user.target

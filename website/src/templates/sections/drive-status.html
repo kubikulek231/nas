@@ -4,89 +4,189 @@
 </header>
 
 <div class="section">
-    <canvas id="driveChart" width="800" height="400"></canvas>
+    <div class="chart-toolbar" id="driveChartToolbar">
+        <button type="button" class="chart-range-btn is-active" data-range="6h">6h</button>
+        <button type="button" class="chart-range-btn" data-range="12h">12h</button>
+        <button type="button" class="chart-range-btn" data-range="1d">1d</button>
+        <button type="button" class="chart-range-btn" data-range="7d">7d</button>
+        <button type="button" class="chart-range-btn" data-range="all">All</button>
+    </div>
+    <div class="drive-chart-shell">
+        <div id="driveChart" style="width: 100%; height: 420px;"></div>
+    </div>
+    <p id="driveChartEmpty" class="drive-chart-empty">
+        No drive history has been collected yet.
+    </p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.1/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 
 <script>
 fetch('/api/drive-status')
 .then(response => response.json())
-.then(data => {
-    const labels = data.map(d => new Date(d.timestamp));
-    const sdaData = data.map(d => ({x: new Date(d.timestamp), y: d.sda}));
-    const sdbData = data.map(d => ({x: new Date(d.timestamp), y: d.sdb}));
+.then(payload => {
+    const chartNode = document.getElementById('driveChart');
+    const emptyNode = document.getElementById('driveChartEmpty');
+    const toolbarNode = document.getElementById('driveChartToolbar');
+    const css = getComputedStyle(document.documentElement);
+    const textColor = css.getPropertyValue('--text').trim();
+    const mutedColor = css.getPropertyValue('--muted').trim();
+    const accentColor = css.getPropertyValue('--accent').trim();
+    const gridColor = css.getPropertyValue('--grid').trim();
+    const hoverBgColor = 'rgba(15, 23, 42, 0.54)';
+    const hoverBorderColor = accentColor;
+    const stateLabels = {
+        0: 'Standby',
+        1: 'Active'
+    };
 
-    const ctx = document.getElementById('driveChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            datasets: [{
-                label: 'ZGY1BRJM',
-                data: sdaData,
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                tension: 0.1,
-                pointRadius: 0,
-                borderWidth: 1
-            }, {
-                label: 'ZGY1BRTB',
-                data: sdbData,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                tension: 0.1,
-                pointRadius: 0,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        displayFormats: {
-                            day: 'MMM dd'
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Time'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 1,
-                    ticks: {
-                        stepSize: 1,
-                        callback: function(value) {
-                            return value === 0 ? 'Standby' : 'Active';
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'State'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: true
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const state = context.parsed.y === 0 ? 'Standby' : 'Active';
-                            return `${context.dataset.label}: ${state}`;
-                        }
-                    }
-                }
+    const traces = (payload.series || [])
+        .map(series => {
+            const points = (series.points || []).filter(point => point.state === 0 || point.state === 1);
+            if (!points.length) {
+                return null;
             }
+
+            return {
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: series.label,
+                x: points.map(point => point.timestamp),
+                y: points.map(point => point.state),
+                text: points.map(point => stateLabels[point.state]),
+                line: {
+                    shape: 'hv',
+                    width: 3,
+                    color: accentColor
+                },
+                marker: {
+                    size: 7,
+                    color: accentColor,
+                    line: {
+                        width: 1.5,
+                        color: css.getPropertyValue('--bg-elevated').trim()
+                    }
+                },
+                hovertemplate: '%{x|%Y-%m-%d %H:%M}<br>%{text}<extra>%{fullData.name}</extra>'
+            };
+        })
+        .filter(Boolean);
+
+    if (!traces.length) {
+        chartNode.style.display = 'none';
+        emptyNode.style.display = 'block';
+        toolbarNode.style.display = 'none';
+        return;
+    }
+
+    const allTimestamps = traces.flatMap(trace => trace.x).map(value => new Date(value));
+    const latest = new Date(Math.max.apply(null, allTimestamps));
+
+    function getRangeBounds(rangeKey) {
+        if (rangeKey === 'all') {
+            return null;
         }
+
+        const hoursByKey = {
+            '6h': 6,
+            '12h': 12,
+            '1d': 24,
+            '7d': 168
+        };
+        const hours = hoursByKey[rangeKey] || 6;
+        const start = new Date(latest.getTime() - (hours * 60 * 60 * 1000));
+        return [start.toISOString(), latest.toISOString()];
+    }
+
+    const layout = {
+        margin: { t: 24, r: 24, b: 56, l: 72 },
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        font: {
+            color: textColor
+        },
+        hovermode: 'x unified',
+        hoverlabel: {
+            bgcolor: hoverBgColor,
+            bordercolor: hoverBorderColor,
+            font: {
+                color: textColor
+            }
+        },
+        legend: {
+            orientation: 'h',
+            yanchor: 'bottom',
+            y: 1.02,
+            xanchor: 'left',
+            x: 0,
+            font: {
+                color: textColor
+            }
+        },
+        xaxis: {
+            type: 'date',
+            title: 'Time',
+            showgrid: true,
+            gridcolor: gridColor,
+            zeroline: false,
+            showspikes: true,
+            spikecolor: accentColor,
+            spikethickness: 1,
+            spikesnap: 'cursor',
+            tickfont: {
+                color: mutedColor
+            },
+            titlefont: {
+                color: textColor
+            },
+            rangeslider: {
+                visible: true,
+                thickness: 0.1,
+                bgcolor: css.getPropertyValue('--bg-elevated').trim(),
+                bordercolor: css.getPropertyValue('--border').trim()
+            }
+        },
+        yaxis: {
+            title: 'State',
+            range: [-0.15, 1.15],
+            tickvals: [0, 1],
+            ticktext: ['Standby', 'Active'],
+            showgrid: true,
+            gridcolor: gridColor,
+            tickfont: {
+                color: mutedColor
+            },
+            titlefont: {
+                color: textColor
+            },
+            zeroline: false
+        }
+    };
+
+    Plotly.newPlot(chartNode, traces, layout, {
+        responsive: true,
+        displaylogo: false,
+        scrollZoom: true,
+        modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d']
     });
+
+    function applyRange(rangeKey) {
+        const bounds = getRangeBounds(rangeKey);
+        Plotly.relayout(chartNode, {
+            'xaxis.range': bounds || null,
+            'xaxis.autorange': bounds ? false : true
+        });
+
+        toolbarNode.querySelectorAll('.chart-range-btn').forEach(button => {
+            button.classList.toggle('is-active', button.dataset.range === rangeKey);
+        });
+    }
+
+    toolbarNode.querySelectorAll('.chart-range-btn').forEach(button => {
+        button.addEventListener('click', () => applyRange(button.dataset.range));
+    });
+
+    applyRange('6h');
 })
 .catch(error => console.error('Error fetching drive status:', error));
 </script>

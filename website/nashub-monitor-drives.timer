@@ -1,0 +1,11 @@
+[Unit]
+Description=Run NAS drive history collector every 5 minutes
+
+[Timer]
+OnCalendar=*:0/5
+Persistent=true
+AccuracySec=1min
+Unit=nashub-monitor-drives.service
+
+[Install]
+WantedBy=timers.target
