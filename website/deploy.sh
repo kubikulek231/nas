@@ -27,6 +27,16 @@ sudo systemctl daemon-reload   # required after changing unit files[web:92][web:
 echo "[deploy] Restarting service ${SERVICE_NAME} ..."
 sudo systemctl restart "${SERVICE_NAME}"
 
+echo "[deploy] Setting up drive monitoring cron job ..."
+# Get current crontab content, or empty if none exists
+CRON_CONTENT=$(sudo crontab -l 2>/dev/null || echo "")
+if echo "$CRON_CONTENT" | grep -q "monitor_drives.py"; then
+    echo "[deploy] Cron job already exists, skipping..."
+else
+    echo "[deploy] Adding cron job..."
+    (echo "$CRON_CONTENT"; echo "*/5 * * * * /usr/bin/python3 ${TARGET_DIR}/monitor_drives.py") | sudo crontab -
+fi
+
 echo "[deploy] You can view lastly logged by 'sudo journalctl -u nashub-website.service -n 50 --no-pager -f'"
 
 echo "[deploy] Sleeping for 5 seconds..."

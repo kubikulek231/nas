@@ -1,0 +1,92 @@
+<header class="header" id="drive-status">
+    <h1 data-lang="en">Drive Status</h1>
+    <h1 data-lang="cs">Stav disků</h1>
+</header>
+
+<div class="section">
+    <canvas id="driveChart" width="800" height="400"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.1/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<script>
+fetch('/api/drive-status')
+.then(response => response.json())
+.then(data => {
+    const labels = data.map(d => new Date(d.timestamp));
+    const sdaData = data.map(d => ({x: new Date(d.timestamp), y: d.sda}));
+    const sdbData = data.map(d => ({x: new Date(d.timestamp), y: d.sdb}));
+
+    const ctx = document.getElementById('driveChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: 'ZGY1BRJM',
+                data: sdaData,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                pointRadius: 0,
+                borderWidth: 1
+            }, {
+                label: 'ZGY1BRTB',
+                data: sdbData,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1,
+                pointRadius: 0,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'MMM dd'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 1,
+                    ticks: {
+                        stepSize: 1,
+                        callback: function(value) {
+                            return value === 0 ? 'Standby' : 'Active';
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'State'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const state = context.parsed.y === 0 ? 'Standby' : 'Active';
+                            return `${context.dataset.label}: ${state}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+})
+.catch(error => console.error('Error fetching drive status:', error));
+</script>
