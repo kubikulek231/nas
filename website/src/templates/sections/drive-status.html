@@ -51,7 +51,7 @@ fetch('/api/drive-status')
                 type: 'scatter',
                 mode: 'lines+markers',
                 name: series.label,
-                x: points.map(point => point.timestamp),
+                x: points.map(point => new Date(point.timestamp)),
                 y: points.map(point => point.state),
                 text: points.map(point => stateLabels[point.state]),
                 line: {
@@ -79,9 +79,6 @@ fetch('/api/drive-status')
         return;
     }
 
-    const allTimestamps = traces.flatMap(trace => trace.x).map(value => new Date(value));
-    const latest = new Date(Math.max.apply(null, allTimestamps));
-
     function getRangeBounds(rangeKey) {
         if (rangeKey === 'all') {
             return null;
@@ -94,8 +91,9 @@ fetch('/api/drive-status')
             '7d': 168
         };
         const hours = hoursByKey[rangeKey] || 6;
-        const start = new Date(latest.getTime() - (hours * 60 * 60 * 1000));
-        return [start.toISOString(), latest.toISOString()];
+        const end = new Date();
+        const start = new Date(end.getTime() - (hours * 60 * 60 * 1000));
+        return [start, end];
     }
 
     const layout = {
@@ -172,10 +170,17 @@ fetch('/api/drive-status')
 
     function applyRange(rangeKey) {
         const bounds = getRangeBounds(rangeKey);
-        Plotly.relayout(chartNode, {
-            'xaxis.range': bounds || null,
-            'xaxis.autorange': bounds ? false : true
-        });
+        if (bounds) {
+            Plotly.relayout(chartNode, {
+                'xaxis.autorange': false,
+                'xaxis.range[0]': bounds[0],
+                'xaxis.range[1]': bounds[1]
+            });
+        } else {
+            Plotly.relayout(chartNode, {
+                'xaxis.autorange': true
+            });
+        }
 
         toolbarNode.querySelectorAll('.chart-range-btn').forEach(button => {
             button.classList.toggle('is-active', button.dataset.range === rangeKey);
