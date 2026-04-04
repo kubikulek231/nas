@@ -47,6 +47,10 @@
   font-weight: 500;
 }
 
+.torrent-button-text {
+  font-size: 1.05rem;
+}
+
 /* Hover / active */
 .button-primary:hover {
   background-color: rgba(13, 136, 58, 0.35);
