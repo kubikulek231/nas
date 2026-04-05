@@ -1,4 +1,5 @@
 import os
+import datetime
 from flask import Flask, render_template, jsonify
 from drive_history import POOL_KEY, POOL_LABEL, load_recent_history
 from status import summarize_pool, disk_usage_gib
@@ -58,3 +59,27 @@ def drive_status():
         }
     ]
     return jsonify({"series": series})
+
+@app.route("/api/net-stats")
+def net_stats():
+    interfaces = {}
+    try:
+        with open("/proc/net/dev") as f:
+            for line in f.readlines()[2:]:
+                parts = line.split(":")
+                if len(parts) != 2:
+                    continue
+                iface = parts[0].strip()
+                if iface == "lo":
+                    continue
+                fields = parts[1].split()
+                interfaces[iface] = {
+                    "rx_bytes": int(fields[0]),
+                    "tx_bytes": int(fields[8]),
+                }
+    except Exception:
+        pass
+    return jsonify({
+        "ts": datetime.datetime.now().isoformat(),
+        "interfaces": interfaces,
+    })

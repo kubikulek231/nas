@@ -1,0 +1,215 @@
+<header class="header" id="network-traffic">
+    <h1 data-lang="en">Network Traffic</h1>
+    <h1 data-lang="cs">Síťový provoz</h1>
+</header>
+
+<div class="section">
+    <div class="chart-toolbar" id="netIfaceToolbar" style="display:none"></div>
+    <div id="netRateSummary" class="net-rate-summary"></div>
+    <div class="drive-chart-shell">
+        <div id="netChart" style="width: 100%; height: 380px;"></div>
+    </div>
+    <p id="netChartEmpty" class="drive-chart-empty" style="display:block">
+        <span data-lang="en">Collecting data…</span>
+        <span data-lang="cs">Sbírám data…</span>
+    </p>
+</div>
+
+<script>
+(function () {
+    const POLL_MS   = 2000;
+    const MAX_PTS   = 300; // ~10 min at 2 s
+    const COLORS    = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4'];
+
+    const chartNode   = document.getElementById('netChart');
+    const emptyNode   = document.getElementById('netChartEmpty');
+    const toolbar     = document.getElementById('netIfaceToolbar');
+    const summaryNode = document.getElementById('netRateSummary');
+    const css         = getComputedStyle(document.documentElement);
+
+    const cv = name => css.getPropertyValue(name).trim();
+
+    let buffer        = [];   // [{ts: Date, ifaces: {name: {rx_bytes, tx_bytes}}}]
+    let selectedIfaces = new Set();
+    let allIfaces     = [];
+    let colorMap      = {};
+    let plotInited    = false;
+
+    // ── helpers ────────────────────────────────────────────────────────────
+    function initIfaceButtons(names) {
+        allIfaces = names;
+        names.forEach((n, i) => { colorMap[n] = COLORS[i % COLORS.length]; });
+
+        // Default selection: tun0 if present, otherwise everything
+        if (names.includes('tun0')) {
+            selectedIfaces.add('tun0');
+        } else {
+            names.forEach(n => selectedIfaces.add(n));
+        }
+
+        toolbar.innerHTML = '';
+        names.forEach(name => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'chart-range-btn' + (selectedIfaces.has(name) ? ' is-active' : '');
+            btn.textContent = name;
+            btn.dataset.iface = name;
+            btn.addEventListener('click', () => {
+                if (selectedIfaces.has(name)) {
+                    if (selectedIfaces.size > 1) selectedIfaces.delete(name);
+                } else {
+                    selectedIfaces.add(name);
+                }
+                toolbar.querySelectorAll('.chart-range-btn').forEach(b => {
+                    b.classList.toggle('is-active', selectedIfaces.has(b.dataset.iface));
+                });
+                renderChart();
+            });
+            toolbar.appendChild(btn);
+        });
+        toolbar.style.display = '';
+    }
+
+    function computeRates() {
+        // Returns [{ts, iface, rx_mbps, tx_mbps}] — one entry per (sample, iface)
+        const rates = [];
+        for (let i = 1; i < buffer.length; i++) {
+            const prev = buffer[i - 1];
+            const curr = buffer[i];
+            const dt   = (curr.ts - prev.ts) / 1000;
+            if (dt <= 0) continue;
+            for (const iface of allIfaces) {
+                const pc = prev.ifaces[iface];
+                const cc = curr.ifaces[iface];
+                if (!pc || !cc) continue;
+                // Guard against counter resets (interface bounce)
+                const rx = cc.rx_bytes >= pc.rx_bytes ? cc.rx_bytes - pc.rx_bytes : 0;
+                const tx = cc.tx_bytes >= pc.tx_bytes ? cc.tx_bytes - pc.tx_bytes : 0;
+                rates.push({
+                    ts:      curr.ts,
+                    iface,
+                    rx_mbps: rx / dt / (1024 * 1024),
+                    tx_mbps: tx / dt / (1024 * 1024),
+                });
+            }
+        }
+        return rates;
+    }
+
+    function renderChart() {
+        const rates = computeRates();
+
+        // ── live rate chips ────────────────────────────────────────────────
+        const latest = {};
+        rates.forEach(r => { latest[r.iface] = r; });
+        summaryNode.innerHTML = [...selectedIfaces].map(iface => {
+            const r = latest[iface];
+            if (!r) return '';
+            const color = colorMap[iface];
+            return `<span class="net-rate-chip" style="border-color:${color}">` +
+                `<b style="color:${color}">${iface}</b>` +
+                `&thinsp;↓ ${r.rx_mbps.toFixed(2)} MB/s` +
+                `&ensp;↑ ${r.tx_mbps.toFixed(2)} MB/s` +
+                `</span>`;
+        }).join('');
+
+        if (rates.length === 0) {
+            chartNode.style.display = 'none';
+            emptyNode.style.display = 'block';
+            return;
+        }
+        chartNode.style.display = '';
+        emptyNode.style.display = 'none';
+
+        // ── build traces ──────────────────────────────────────────────────
+        const traces = [];
+        for (const iface of selectedIfaces) {
+            const pts   = rates.filter(r => r.iface === iface);
+            if (!pts.length) continue;
+            const color = colorMap[iface];
+            const xs    = pts.map(r => r.ts);
+            traces.push({
+                type: 'scatter', mode: 'lines',
+                name: `${iface} ↓`,
+                x: xs, y: pts.map(r => r.rx_mbps),
+                line: { color, width: 2, shape: 'linear' },
+                hovertemplate: '%{x|%H:%M:%S}<br>DL %{y:.3f} MB/s<extra>' + iface + '</extra>',
+            });
+            traces.push({
+                type: 'scatter', mode: 'lines',
+                name: `${iface} ↑`,
+                x: xs, y: pts.map(r => r.tx_mbps),
+                line: { color, width: 2, dash: 'dot', shape: 'linear' },
+                hovertemplate: '%{x|%H:%M:%S}<br>UL %{y:.3f} MB/s<extra>' + iface + '</extra>',
+            });
+        }
+
+        const layout = {
+            margin: { t: 24, r: 24, b: 56, l: 80 },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor:  'rgba(0,0,0,0)',
+            font:          { color: cv('--text') },
+            hovermode:     'x unified',
+            hoverlabel: {
+                bgcolor:    'rgba(15,23,42,0.54)',
+                bordercolor: cv('--accent'),
+                font:       { color: cv('--text') },
+            },
+            legend: {
+                orientation: 'h', yanchor: 'bottom', y: 1.02, xanchor: 'left', x: 0,
+                font: { color: cv('--text') },
+            },
+            xaxis: {
+                type: 'date', showgrid: true, gridcolor: cv('--grid'), zeroline: false,
+                tickfont: { color: cv('--muted') }, titlefont: { color: cv('--text') },
+                showspikes: true, spikecolor: cv('--accent'), spikethickness: 1,
+                rangeslider: {
+                    visible: true, thickness: 0.08,
+                    bgcolor: cv('--bg-elevated'), bordercolor: cv('--border'),
+                },
+            },
+            yaxis: {
+                title: 'MB/s', showgrid: true, gridcolor: cv('--grid'),
+                zeroline: true, zerolinecolor: cv('--grid'),
+                rangemode: 'tozero',
+                tickfont: { color: cv('--muted') }, titlefont: { color: cv('--text') },
+            },
+        };
+
+        const config = {
+            responsive: true, displaylogo: false, scrollZoom: true,
+            modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d'],
+        };
+
+        if (!plotInited) {
+            Plotly.newPlot(chartNode, traces, layout, config);
+            plotInited = true;
+        } else {
+            Plotly.react(chartNode, traces, layout, config);
+        }
+    }
+
+    // ── polling loop ──────────────────────────────────────────────────────
+    async function poll() {
+        try {
+            const data = await fetch('/api/net-stats').then(r => r.json());
+            const sample = { ts: new Date(data.ts), ifaces: data.interfaces || {} };
+            buffer.push(sample);
+            if (buffer.length > MAX_PTS + 1) buffer.shift();
+
+            // Detect new interfaces on first sample
+            const names = Object.keys(sample.ifaces).sort();
+            if (allIfaces.length === 0 && names.length > 0) {
+                initIfaceButtons(names);
+            }
+
+            if (buffer.length >= 2) renderChart();
+        } catch (e) {
+            console.error('net-stats poll error:', e);
+        }
+        setTimeout(poll, POLL_MS);
+    }
+
+    poll();
+})();
+</script>
