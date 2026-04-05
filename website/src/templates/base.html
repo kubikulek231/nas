@@ -3,10 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>NAS</title>
+  <script>
+    (function () {
+      try {
+        var savedTheme = window.localStorage && localStorage.getItem('nasTheme');
+        if (savedTheme === 'light' || savedTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      } catch (e) {
+      }
+    })();
+  </script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='storage.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='browser.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='guides.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='responsive.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -23,6 +37,5 @@
   </div>
 
   <script src="{{ url_for('static', filename='language.js') }}"></script>
-  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 </body>
 </html>

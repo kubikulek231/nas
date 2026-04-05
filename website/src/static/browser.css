@@ -1,36 +1,14 @@
-.button {
-  display: flex;              /* was: flexbox */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.button-browser {
   gap: 3px;
-  padding: 12px 20px;
-  border-radius: 6px;
-  border: 1px solid rgba(31, 41, 55, 0.9);
-  background-color: #111827;
-  color: #e5e7eb;
-  font-size: 1.2rem;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  width: 100%;
-  box-sizing: border-box;     /* ensures padding doesn't overflow */
-  transition:
-    background-color 0.18s ease,
-    border-color 0.18s ease,
-    transform 0.08s ease,
-    box-shadow 0.18s ease;
+  padding-bottom: 30px;
 }
 
-/* Icon block */
-.button-image {
+.button-browser-image {
   width: 48px;
   height: 48px;
 
-  /* color of the icon */
-  background-color: #e5e7eb;
+  background-color: currentColor;
 
-  /* use SVG as mask */
   -webkit-mask-image: url("/static/browse.svg");
   mask-image: url("/static/browse.svg");
   -webkit-mask-repeat: no-repeat;
@@ -41,30 +19,6 @@
   mask-size: 70%;
 }
 
-/* Text block */
-.button-text {
-  font-size: 0.98rem;
-  font-weight: 500;
-}
-
 .torrent-button-text {
   font-size: 1.05rem;
-}
-
-/* Hover / active */
-.button-primary:hover {
-  background-color: rgba(13, 136, 58, 0.35);
-  box-shadow: 3px 3px 3px  rgba(28, 63, 41, 0.336);
-  transform: translateY(-1px);
-}
-
-.button-primary:active {
-  background-color: rgb(28, 63, 41);
-  box-shadow: 3px 3px 3px rgba(28, 63, 41, 0.336);
-  transform: translateY(0);
-}
-
-.button-primary a:hover {
-  color: inherit;
-  text-decoration: none !important;
 }

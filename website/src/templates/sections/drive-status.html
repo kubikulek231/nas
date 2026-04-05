@@ -1,9 +1,7 @@
-<header class="header" id="drive-status">
-    <h1 data-lang="en">Drive Status</h1>
-    <h1 data-lang="cs">Stav disků</h1>
-</header>
+<section class="card" id="drive-status">
+    <h2 data-lang="en">Drive Status</h2>
+    <h2 data-lang="cs">Stav disků</h2>
 
-<div class="section">
     <div class="chart-toolbar" id="driveChartToolbar">
         <button type="button" class="chart-range-btn is-active" data-range="6h">6h</button>
         <button type="button" class="chart-range-btn" data-range="12h">12h</button>
@@ -17,7 +15,7 @@
     <p id="driveChartEmpty" class="drive-chart-empty">
         No drive history has been collected yet.
     </p>
-</div>
+</section>
 <script>
 fetch('/api/drive-status')
 .then(response => response.json())
@@ -25,55 +23,150 @@ fetch('/api/drive-status')
     const chartNode = document.getElementById('driveChart');
     const emptyNode = document.getElementById('driveChartEmpty');
     const toolbarNode = document.getElementById('driveChartToolbar');
-    const css = getComputedStyle(document.documentElement);
-    const textColor = css.getPropertyValue('--text').trim();
-    const mutedColor = css.getPropertyValue('--muted').trim();
-    const accentColor = css.getPropertyValue('--accent').trim();
-    const gridColor = css.getPropertyValue('--grid').trim();
-    const hoverBgColor = 'rgba(15, 23, 42, 0.54)';
-    const hoverBorderColor = accentColor;
     const stateLabels = {
         0: 'Standby',
         1: 'Active'
     };
+    let activeRange = '6h';
 
-    const traces = (payload.series || [])
-        .map(series => {
-            const points = (series.points || []).filter(point => point.state === 0 || point.state === 1);
-            if (!points.length) {
-                return null;
-            }
+    function getThemeColors() {
+        const css = getComputedStyle(document.documentElement);
+        return {
+            css,
+            textColor: css.getPropertyValue('--text').trim(),
+            mutedColor: css.getPropertyValue('--muted').trim(),
+            accentColor: css.getPropertyValue('--accent').trim(),
+            gridColor: css.getPropertyValue('--grid').trim(),
+            bgElevated: css.getPropertyValue('--bg-elevated').trim(),
+            borderColor: css.getPropertyValue('--border').trim(),
+            hoverBgColor: 'rgba(15, 23, 42, 0.54)'
+        };
+    }
 
-            return {
-                type: 'scatter',
-                mode: 'lines+markers',
-                name: series.label,
-                x: points.map(point => new Date(point.timestamp)),
-                y: points.map(point => point.state),
-                text: points.map(point => stateLabels[point.state]),
-                line: {
-                    shape: 'hv',
-                    width: 3,
-                    color: accentColor
-                },
-                marker: {
-                    size: 7,
-                    color: accentColor,
+    function buildTraces() {
+        const theme = getThemeColors();
+        return (payload.series || [])
+            .map(series => {
+                const points = (series.points || []).filter(point => point.state === 0 || point.state === 1);
+                if (!points.length) {
+                    return null;
+                }
+
+                return {
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: series.label,
+                    x: points.map(point => new Date(point.timestamp)),
+                    y: points.map(point => point.state),
+                    text: points.map(point => stateLabels[point.state]),
                     line: {
-                        width: 1.5,
-                        color: css.getPropertyValue('--bg-elevated').trim()
-                    }
-                },
-                hovertemplate: '%{x|%Y-%m-%d %H:%M}<br>%{text}<extra>%{fullData.name}</extra>'
-            };
-        })
-        .filter(Boolean);
+                        shape: 'hv',
+                        width: 3,
+                        color: theme.accentColor
+                    },
+                    marker: {
+                        size: 7,
+                        color: theme.accentColor,
+                        line: {
+                            width: 1.5,
+                            color: theme.bgElevated
+                        }
+                    },
+                    hovertemplate: '%{x|%Y-%m-%d %H:%M}<br>%{text}<extra>%{fullData.name}</extra>'
+                };
+            })
+            .filter(Boolean);
+    }
 
-    if (!traces.length) {
+    function renderChart() {
+        const theme = getThemeColors();
+        const traces = buildTraces();
+
+        if (!traces.length) {
+            chartNode.style.display = 'none';
+            emptyNode.style.display = 'block';
+            toolbarNode.style.display = 'none';
+            return;
+        }
+
         chartNode.style.display = 'none';
-        emptyNode.style.display = 'block';
-        toolbarNode.style.display = 'none';
-        return;
+        chartNode.style.display = '';
+        emptyNode.style.display = 'none';
+        toolbarNode.style.display = '';
+
+        const layout = {
+            margin: { t: 24, r: 24, b: 56, l: 72 },
+            paper_bgcolor: 'rgba(0, 0, 0, 0)',
+            plot_bgcolor: 'rgba(0, 0, 0, 0)',
+            font: {
+                color: theme.textColor
+            },
+            hovermode: 'x unified',
+            hoverlabel: {
+                bgcolor: theme.hoverBgColor,
+                bordercolor: theme.accentColor,
+                font: {
+                    color: theme.textColor
+                }
+            },
+            legend: {
+                orientation: 'h',
+                yanchor: 'bottom',
+                y: 1.02,
+                xanchor: 'left',
+                x: 0,
+                font: {
+                    color: theme.textColor
+                }
+            },
+            xaxis: {
+                type: 'date',
+                title: 'Time',
+                showgrid: true,
+                gridcolor: theme.gridColor,
+                zeroline: false,
+                showspikes: true,
+                spikecolor: theme.accentColor,
+                spikethickness: 1,
+                spikesnap: 'cursor',
+                tickfont: {
+                    color: theme.mutedColor
+                },
+                titlefont: {
+                    color: theme.textColor
+                },
+                rangeslider: {
+                    visible: true,
+                    thickness: 0.1,
+                    bgcolor: theme.bgElevated,
+                    bordercolor: theme.borderColor
+                }
+            },
+            yaxis: {
+                title: 'State',
+                range: [-0.15, 1.15],
+                tickvals: [0, 1],
+                ticktext: ['Standby', 'Active'],
+                showgrid: true,
+                gridcolor: theme.gridColor,
+                tickfont: {
+                    color: theme.mutedColor
+                },
+                titlefont: {
+                    color: theme.textColor
+                },
+                zeroline: false
+            }
+        };
+
+        Plotly.react(chartNode, traces, layout, {
+            responsive: true,
+            displaylogo: false,
+            scrollZoom: true,
+            modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d']
+        });
+
+        applyRange(activeRange);
     }
 
     function getRangeBounds(rangeKey) {
@@ -93,79 +186,8 @@ fetch('/api/drive-status')
         return [start, end];
     }
 
-    const layout = {
-        margin: { t: 24, r: 24, b: 56, l: 72 },
-        paper_bgcolor: 'rgba(0, 0, 0, 0)',
-        plot_bgcolor: 'rgba(0, 0, 0, 0)',
-        font: {
-            color: textColor
-        },
-        hovermode: 'x unified',
-        hoverlabel: {
-            bgcolor: hoverBgColor,
-            bordercolor: hoverBorderColor,
-            font: {
-                color: textColor
-            }
-        },
-        legend: {
-            orientation: 'h',
-            yanchor: 'bottom',
-            y: 1.02,
-            xanchor: 'left',
-            x: 0,
-            font: {
-                color: textColor
-            }
-        },
-        xaxis: {
-            type: 'date',
-            title: 'Time',
-            showgrid: true,
-            gridcolor: gridColor,
-            zeroline: false,
-            showspikes: true,
-            spikecolor: accentColor,
-            spikethickness: 1,
-            spikesnap: 'cursor',
-            tickfont: {
-                color: mutedColor
-            },
-            titlefont: {
-                color: textColor
-            },
-            rangeslider: {
-                visible: true,
-                thickness: 0.1,
-                bgcolor: css.getPropertyValue('--bg-elevated').trim(),
-                bordercolor: css.getPropertyValue('--border').trim()
-            }
-        },
-        yaxis: {
-            title: 'State',
-            range: [-0.15, 1.15],
-            tickvals: [0, 1],
-            ticktext: ['Standby', 'Active'],
-            showgrid: true,
-            gridcolor: gridColor,
-            tickfont: {
-                color: mutedColor
-            },
-            titlefont: {
-                color: textColor
-            },
-            zeroline: false
-        }
-    };
-
-    Plotly.newPlot(chartNode, traces, layout, {
-        responsive: true,
-        displaylogo: false,
-        scrollZoom: true,
-        modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d']
-    });
-
     function applyRange(rangeKey) {
+        activeRange = rangeKey;
         const bounds = getRangeBounds(rangeKey);
         if (bounds) {
             Plotly.relayout(chartNode, {
@@ -188,7 +210,9 @@ fetch('/api/drive-status')
         button.addEventListener('click', () => applyRange(button.dataset.range));
     });
 
-    applyRange('6h');
+    document.addEventListener('nas:themechange', renderChart);
+
+    renderChart();
 })
 .catch(error => console.error('Error fetching drive status:', error));
 </script>

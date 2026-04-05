@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   (function () {
     var currentLang = 'cs'; // preferred default
+    var currentTheme = 'dark';
 
     function setLanguage(lang) {
       currentLang = lang;
@@ -22,6 +23,28 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
+    function getPreferredTheme() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+
+      document.querySelectorAll('.theme-btn').forEach(function (btn) {
+        var isActive = btn.getAttribute('data-theme-btn') === theme;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      document.dispatchEvent(new CustomEvent('nas:themechange', {
+        detail: { theme: theme }
+      }));
+    }
+
     function handleLangClick(e) {
       var btn = e.target.closest('.lang-btn');
       if (!btn) return;
@@ -33,15 +56,34 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
 
+    function handleThemeClick(e) {
+      var btn = e.target.closest('.theme-btn');
+      if (!btn) return;
+      var theme = btn.getAttribute('data-theme-btn');
+      if (theme !== 'light' && theme !== 'dark') return;
+      setTheme(theme);
+      if (window.localStorage) {
+        localStorage.setItem('nasTheme', theme);
+      }
+    }
+
     document.addEventListener('click', handleLangClick);
+    document.addEventListener('click', handleThemeClick);
 
     var saved = window.localStorage && localStorage.getItem('nasLang');
+    var savedTheme = window.localStorage && localStorage.getItem('nasTheme');
 
     // If saved, use it; otherwise use currentLang ('cs')
     if (saved === 'en' || saved === 'cs') {
       setLanguage(saved);
     } else {
       setLanguage(currentLang); // << this is the important change
+    }
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    } else {
+      setTheme(getPreferredTheme());
     }
   })();
 });

@@ -1,9 +1,7 @@
-<header class="header" id="network-traffic">
-    <h1 data-lang="en">Network Traffic</h1>
-    <h1 data-lang="cs">Síťový provoz</h1>
-</header>
+<section class="card" id="network-traffic">
+    <h2 data-lang="en">Network Traffic</h2>
+    <h2 data-lang="cs">Síťový provoz</h2>
 
-<div class="section">
     <div class="chart-toolbar" id="netIfaceToolbar" style="display:none"></div>
     <div id="netRateSummary" class="net-rate-summary"></div>
     <div class="drive-chart-shell">
@@ -13,7 +11,7 @@
         <span data-lang="en">Collecting data…</span>
         <span data-lang="cs">Sbírám data…</span>
     </p>
-</div>
+</section>
 
 <script>
 (function () {
@@ -211,5 +209,11 @@
     }
 
     poll();
+
+    document.addEventListener('nas:themechange', () => {
+        if (plotInited) {
+            renderChart();
+        }
+    });
 })();
 </script>
