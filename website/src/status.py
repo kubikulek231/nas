@@ -1,6 +1,6 @@
 import os
 import shutil
-from zpool_status import ZPool
+from zpool_status import ZPool, MissingPoolError
 
 MOCK_ZFS = False
 
@@ -44,7 +44,17 @@ def summarize_pool(pool_name):
             }
 
     # real call
-    z = ZPool(pool_name, options=["-v"])
+    try:
+        z = ZPool(pool_name, options=["-v"])
+    except (MissingPoolError, Exception) as e:
+        return {
+            "state": "UNAVAILABLE",
+            "status": f"Pool is unavailable: {str(e)}",
+            "action": "Check pool status with 'zpool status' command",
+            "scrub": None,
+            "healthy": False,
+            "bad_devices": [],
+        }
     s = z.get_status()
 
     state = s.get("state")
